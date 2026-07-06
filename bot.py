@@ -5,6 +5,7 @@ Aiogram 3 asosida yaratilgan to'liq funksional bot.
 
 import asyncio
 import logging
+import os
 import sys
 from os import getenv
 
@@ -12,6 +13,8 @@ from aiogram import Bot, Dispatcher, Router, F
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.types import Message
+from aiogram.fsm.storage.memory import MemoryStorage
+from aiohttp import web
 from dotenv import load_dotenv
 
 from database import increment_message_count
@@ -40,7 +43,7 @@ bot = Bot(
     token=BOT_TOKEN,
     default=DefaultBotProperties(parse_mode=ParseMode.HTML),
 )
-dp = Dispatcher()
+dp = Dispatcher(storage=MemoryStorage())
 
 # Noma'lum xabarlar uchun alohida router (ENG OXIRIDA ishlanadi)
 other_router = Router()
@@ -67,19 +70,40 @@ dp.include_router(admin.router)
 dp.include_router(card.router)
 dp.include_router(guide.router)
 dp.include_router(generator.router)
+# Noma'lum buyruqlar uchun (eng oxirida bo'lishi shart)
 dp.include_router(other_router)
 
 
+async def handle_dummy_request(request):
+    """Render uchun soxta javob qaytaruvchi server."""
+    return web.Response(text="Bot is running smoothly on Render!")
+
+
+async def run_dummy_server():
+    """Render port kutish xatoligini aylanib o'tish uchun server."""
+    app = web.Application()
+    app.router.add_get('/', handle_dummy_request)
+    runner = web.AppRunner(app)
+    await runner.setup()
+    
+    # Render o'zi bergan portni yoki 8080 ni olamiz
+    port = int(os.environ.get("PORT", 8080))
+    site = web.TCPSite(runner, '0.0.0.0', port)
+    await site.start()
+    logging.info(f"🌐 Soxta veb-server ishga tushdi: {port}-port")
+
+
 async def main():
-    """Botni ishga tushirish."""
-    logger.info("🚀 Bot ishga tushmoqda...")
-    logger.info("✅ Supabase bazasiga ulandi")
+    """Botni ishga tushirish uchun asosiy funksiya."""
+    logging.info("🚀 Bot ishga tushmoqda...")
+    
+    # Soxta serverni orqa fonda ishga tushiramiz
+    asyncio.create_task(run_dummy_server())
 
-    # Eski xabarlarni o'tkazib yuborish
+    # Botni ishga tushirishdan oldin barcha eski update'larni o'tkazib yuborish
     await bot.delete_webhook(drop_pending_updates=True)
-
-    # Polling orqali ishga tushirish
-    logger.info("✅ Bot muvaffaqiyatli ishga tushdi!")
+    
+    logging.info("✅ Bot muvaffaqiyatli ishga tushdi!")
     await dp.start_polling(bot)
 
 
