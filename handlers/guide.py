@@ -1,14 +1,30 @@
 """Qo'llanma handlerlari - Pagination bilan."""
 
+import asyncio
 from aiogram import Router, F
 from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton, InputMediaPhoto
 from aiogram.fsm.context import FSMContext
+from deep_translator import GoogleTranslator
 
 from database import get_guide_page, get_guide_pages_count, get_user_language
 from keyboards import get_back_keyboard
 from translations import get_text
 
 router = Router()
+
+async def translate_text(text: str, target_lang: str) -> str:
+    if target_lang == 'uz' or not text:
+        return text
+    try:
+        loop = asyncio.get_event_loop()
+        translated = await loop.run_in_executor(
+            None,
+            lambda: GoogleTranslator(source='uz', target=target_lang).translate(text)
+        )
+        return translated
+    except Exception as e:
+        print(f"Translation error: {e}")
+        return text
 
 
 def get_guide_keyboard(current_page: int, total_pages: int, lang: str) -> InlineKeyboardMarkup:
@@ -66,7 +82,9 @@ async def show_guide_page(callback: CallbackQuery, state: FSMContext):
         return
         
     keyboard = get_guide_keyboard(page_num, total_pages, lang)
-    text = page_data["text_content"]
+    raw_text = page_data["text_content"]
+    text = await translate_text(raw_text, lang)
+    
     photo_id_str = page_data.get("photo_id")
     photo_ids = photo_id_str.split(",") if photo_id_str else []
     
