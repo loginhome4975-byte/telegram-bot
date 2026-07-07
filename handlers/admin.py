@@ -7,6 +7,9 @@ from aiogram import Router, F
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
+from aiogram.types import BufferedInputFile
+import csv
+import io
 from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 
 from database import (
@@ -463,3 +466,48 @@ async def cb_reg_skip(callback: CallbackQuery):
     except Exception:
         await callback.message.edit_text(callback.message.text + "\n\n⏭ <b>Holati:</b> E'tiborsiz qoldirildi (Skip)")
     await callback.answer("Xabar o'chirildi.", show_alert=False)
+
+@router.callback_query(F.data == "admin_tasks")
+async def cb_admin_tasks(callback: CallbackQuery):
+    """Admin uchun barcha ishlarni CSV formatida yuklab berish."""
+    if callback.from_user.id not in ADMIN_IDS:
+        return
+        
+    res = supabase.table("user_history").select("*").eq("action_type", "Ro'yxatdan o'tish").order("created_at", desc=True).execute()
+    data = res.data or []
+    
+    if not data:
+        await callback.answer("Hozircha hech qanday ishlar mavjud emas.", show_alert=True)
+        return
+        
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(["ID", "User ID", "Holat", "Summa", "Sana", "Email", "Parol", "Ism", "Familiya", "Manzil", "Shahar", "Viloyat", "Pochta indeksi", "Telefon"])
+    
+    for item in data:
+        details = item.get("details") or {}
+        writer.writerow([
+            item.get("id", ""),
+            item.get("user_id", ""),
+            item.get("status", ""),
+            item.get("amount", ""),
+            item.get("created_at", "")[:19].replace("T", " "),
+            details.get("email", ""),
+            details.get("password", ""),
+            details.get("first_name", ""),
+            details.get("last_name", ""),
+            details.get("address", ""),
+            details.get("city", ""),
+            details.get("state", ""),
+            details.get("postal", ""),
+            details.get("phone", ""),
+        ])
+        
+    csv_bytes = output.getvalue().encode('utf-8')
+    file = BufferedInputFile(csv_bytes, filename="ishlar_royxati.csv")
+    
+    await callback.message.answer_document(
+        document=file,
+        caption="📁 Barcha ishlar ro'yxati (CSV formatda)"
+    )
+    await callback.answer()

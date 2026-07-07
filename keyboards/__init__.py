@@ -16,19 +16,25 @@ def get_main_menu_keyboard(lang: str = "uz", is_admin: bool = False) -> InlineKe
     if is_admin:
         first_row.append(InlineKeyboardButton(text=get_text("btn_stats", lang), callback_data="stats"))
 
-    keyboard = InlineKeyboardMarkup(inline_keyboard=[
+    keyboard_layout = [
         first_row,
         [
             InlineKeyboardButton(text=get_text("btn_help", lang), callback_data="help"),
             InlineKeyboardButton(text=get_text("btn_settings", lang), callback_data="settings"),
-        ],
-        [
-            InlineKeyboardButton(text=get_text("btn_guide", lang), callback_data="guide"),
-        ],
-        [
-            InlineKeyboardButton(text=get_text("btn_channel", lang), url="https://t.me/your_channel"),
-        ],
+        ]
+    ]
+    
+    if is_admin:
+        keyboard_layout.append(
+            [InlineKeyboardButton(text="📁 Ishlar ro'yxati", callback_data="admin_tasks")]
+        )
+        
+    keyboard_layout.extend([
+        [InlineKeyboardButton(text=get_text("btn_guide", lang), callback_data="guide")],
+        [InlineKeyboardButton(text=get_text("btn_channel", lang), url="https://t.me/your_channel")]
     ])
+
+    keyboard = InlineKeyboardMarkup(inline_keyboard=keyboard_layout)
     return keyboard
 
 
