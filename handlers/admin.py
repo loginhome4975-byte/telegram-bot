@@ -451,3 +451,15 @@ async def cb_reg_reject(callback: CallbackQuery):
     
     await callback.answer("Rad etildi va kutilayotgan balansdan ayirildi.", show_alert=True)
     await callback.message.edit_text(callback.message.text + "\n\n❌ <b>Holati:</b> Rad etildi (Kutilayotgan balansdan ayirildi)")
+
+@router.callback_query(F.data.startswith("reg_skip_"))
+async def cb_reg_skip(callback: CallbackQuery):
+    """Vazifa to'g'risidagi xabarni e'tiborsiz qoldirish."""
+    if callback.from_user.id not in ADMIN_IDS:
+        return
+        
+    try:
+        await callback.message.delete()
+    except Exception:
+        await callback.message.edit_text(callback.message.text + "\n\n⏭ <b>Holati:</b> E'tiborsiz qoldirildi (Skip)")
+    await callback.answer("Xabar o'chirildi.", show_alert=False)

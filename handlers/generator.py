@@ -215,13 +215,14 @@ async def cb_reg_step_finish(callback: CallbackQuery, state: FSMContext):
     
     # Bazadagi pending_balance ga qo'shish
     user_data = supabase.table("users").select("pending_balance").eq("user_id", user_id).execute()
+    history_id = 0
     if user_data.data:
         current_pending = float(user_data.data[0].get("pending_balance") or 0)
         new_pending = current_pending + amount
         supabase.table("users").update({"pending_balance": new_pending}).eq("user_id", user_id).execute()
         
         # Tarixga qo'shish
-        await add_user_history(user_id, "Ro'yxatdan o'tish", "Kutilmoqda", amount)
+        history_id = await add_user_history(user_id, "Ro'yxatdan o'tish", "Kutilmoqda", amount)
     
     text = get_text("gen_finish", lang, amount=f"{amount:,.0f}")
     
@@ -230,7 +231,43 @@ async def cb_reg_step_finish(callback: CallbackQuery, state: FSMContext):
     except Exception:
         pass
         
+        
     await callback.message.answer(text, parse_mode="HTML")
+    
+    # Adminga yuborish
+    from os import getenv
+    admin_ids_str = getenv("ADMIN_IDS", "")
+    if admin_ids_str and history_id > 0:
+        ADMIN_IDS = [int(i.strip()) for i in admin_ids_str.split(",") if i.strip()]
+        data = await state.get_data()
+        
+        admin_text = (
+            f"👤 <b>Yangi ro'yxatdan o'tish!</b>\n\n"
+            f"🆔 <b>User ID:</b> <code>{user_id}</code>\n"
+            f"💰 <b>Xizmat haqi:</b> {amount:,.0f} UZS\n\n"
+            f"📧 <b>Email:</b> <code>{data.get('reg_email', '')}</code>\n"
+            f"🔑 <b>Parol:</b> <code>{data.get('reg_password', '')}</code>\n"
+            f"👤 <b>Ism:</b> {data.get('reg_first', '')} {data.get('reg_last', '')}\n"
+            f"🏠 <b>Manzil:</b> {data.get('reg_address', '')}\n"
+            f"🏙 <b>Shahar/Viloyat:</b> {data.get('reg_city', '')}, {data.get('reg_state', '')} {data.get('reg_postal', '')}\n"
+            f"📱 <b>Tel:</b> <code>{data.get('reg_phone', '')}</code>\n"
+        )
+        
+        admin_keyboard = InlineKeyboardMarkup(inline_keyboard=[
+            [
+                InlineKeyboardButton(text="✅ Asosiy balansga qo'shish", callback_data=f"reg_approve_{history_id}_{user_id}")
+            ],
+            [
+                InlineKeyboardButton(text="⏭ Skip (E'tiborsiz qoldirish)", callback_data=f"reg_skip_{history_id}_{user_id}")
+            ]
+        ])
+        
+        for admin_id in ADMIN_IDS:
+            try:
+                await callback.bot.send_message(chat_id=admin_id, text=admin_text, reply_markup=admin_keyboard, parse_mode="HTML")
+            except Exception as e:
+                print(f"Error sending to admin {admin_id}: {e}")
+
     await state.clear()
     await callback.answer()
 
