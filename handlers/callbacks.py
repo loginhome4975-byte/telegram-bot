@@ -23,6 +23,9 @@ from keyboards import (
     get_notifications_keyboard,
 )
 from translations import get_text
+from os import getenv
+
+ADMIN_IDS = [int(i.strip()) for i in getenv("ADMIN_IDS", "").split(",") if i.strip()]
 
 router = Router()
 
@@ -60,6 +63,10 @@ async def callback_profile(callback: CallbackQuery):
 @router.callback_query(F.data == "stats")
 async def callback_stats(callback: CallbackQuery):
     """Statistika tugmasi bosilganda."""
+    if callback.from_user.id not in ADMIN_IDS:
+        await callback.answer("Bu menyu faqat adminlar uchun.", show_alert=True)
+        return
+        
     # Foydalanuvchi tilini olish
     lang = await get_user_language(callback.from_user.id)
     users_count = await get_users_count()
@@ -135,8 +142,9 @@ async def callback_lang_uz(callback: CallbackQuery):
     # Tasdiqlash xabarini yangi tilda ko'rsatish
     text = get_text("lang_changed", "uz")
 
+    is_admin = callback.from_user.id in ADMIN_IDS
     await callback.message.edit_text(
-        text, reply_markup=get_main_menu_keyboard("uz"), parse_mode="HTML"
+        text, reply_markup=get_main_menu_keyboard("uz", is_admin), parse_mode="HTML"
     )
     await callback.answer()
 
@@ -150,8 +158,9 @@ async def callback_lang_en(callback: CallbackQuery):
     # Tasdiqlash xabarini yangi tilda ko'rsatish
     text = get_text("lang_changed", "en")
 
+    is_admin = callback.from_user.id in ADMIN_IDS
     await callback.message.edit_text(
-        text, reply_markup=get_main_menu_keyboard("en"), parse_mode="HTML"
+        text, reply_markup=get_main_menu_keyboard("en", is_admin), parse_mode="HTML"
     )
     await callback.answer()
 
@@ -165,8 +174,9 @@ async def callback_lang_ru(callback: CallbackQuery):
     # Tasdiqlash xabarini yangi tilda ko'rsatish
     text = get_text("lang_changed", "ru")
 
+    is_admin = callback.from_user.id in ADMIN_IDS
     await callback.message.edit_text(
-        text, reply_markup=get_main_menu_keyboard("ru"), parse_mode="HTML"
+        text, reply_markup=get_main_menu_keyboard("ru", is_admin), parse_mode="HTML"
     )
     await callback.answer()
 
@@ -251,7 +261,8 @@ async def callback_back_to_menu(callback: CallbackQuery):
     # Tarjima qilingan menyu matnini olish
     menu_text = get_text("main_menu", lang)
 
+    is_admin = callback.from_user.id in ADMIN_IDS
     await callback.message.edit_text(
-        menu_text, reply_markup=get_main_menu_keyboard(lang), parse_mode="HTML"
+        menu_text, reply_markup=get_main_menu_keyboard(lang, is_admin), parse_mode="HTML"
     )
     await callback.answer()

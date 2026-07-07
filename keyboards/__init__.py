@@ -5,17 +5,19 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from translations import get_text
 
 
-def get_main_menu_keyboard(lang: str = "uz") -> InlineKeyboardMarkup:
+def get_main_menu_keyboard(lang: str = "uz", is_admin: bool = False) -> InlineKeyboardMarkup:
     """Asosiy menyu inline klaviaturasi.
 
     Args:
         lang: Foydalanuvchi tili
+        is_admin: Foydalanuvchi admin yoki yo'qligi
     """
+    first_row = [InlineKeyboardButton(text=get_text("btn_profile", lang), callback_data="profile")]
+    if is_admin:
+        first_row.append(InlineKeyboardButton(text=get_text("btn_stats", lang), callback_data="stats"))
+
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [
-            InlineKeyboardButton(text=get_text("btn_profile", lang), callback_data="profile"),
-            InlineKeyboardButton(text=get_text("btn_stats", lang), callback_data="stats"),
-        ],
+        first_row,
         [
             InlineKeyboardButton(text=get_text("btn_help", lang), callback_data="help"),
             InlineKeyboardButton(text=get_text("btn_settings", lang), callback_data="settings"),
