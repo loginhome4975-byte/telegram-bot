@@ -17,6 +17,7 @@ from database import (
 from keyboards import (
     get_main_menu_keyboard,
     get_back_keyboard,
+    get_profile_keyboard,
     get_settings_keyboard,
     get_language_keyboard,
     get_notifications_keyboard,
@@ -51,7 +52,7 @@ async def callback_profile(callback: CallbackQuery):
         profile_text = get_text("profile_not_found", lang)
 
     await callback.message.edit_text(
-        profile_text, reply_markup=get_back_keyboard(lang), parse_mode="HTML"
+        profile_text, reply_markup=get_profile_keyboard(lang), parse_mode="HTML"
     )
     await callback.answer()
 

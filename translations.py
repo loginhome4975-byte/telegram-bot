@@ -64,6 +64,13 @@ TRANSLATIONS = {
         # Balans xabarlari
         "profile_balance": "💰 Balans",
         "profile_pending_balance": "⏳ Kutilayotgan balans",
+        "btn_withdraw": "💸 Pul yechish",
+        "withdraw_prompt": "Joriy balans: {balance} UZS\nKutilayotgan balans: {pending_balance} UZS\n\nQancha pul yechmoqchisiz? (Minimal 25000 UZS)\nIltimos, summani kiriting:",
+        "withdraw_min_error": "❌ Minimal yechish summasi 25000 UZS.",
+        "withdraw_no_card": "❌ Iltimos, oldin karta raqamingizni kiriting.",
+        "withdraw_success": "✅ {amount} UZS yechish uchun arizangiz qabul qilindi. Tez orada kartangizga tushirib beriladi.",
+        "withdraw_insufficient": "❌ Balansingizda yetarli mablag' mavjud emas. (Siz kiritgan summa: {amount} UZS, Balansingiz: {balance} UZS)",
+        "withdraw_invalid_amount": "❌ Noto'g'ri summa kiritdingiz. Iltimos, faqat raqam kiriting.",
 
         # Karta xabarlari
         "btn_add_card": "💳 Visa/Mastercard qo'shish",
@@ -212,6 +219,13 @@ TRANSLATIONS = {
         # Balans xabarlari (ingliz tilida)
         "profile_balance": "💰 Balance",
         "profile_pending_balance": "⏳ Pending balance",
+        "btn_withdraw": "💸 Withdraw Money",
+        "withdraw_prompt": "Current balance: {balance} UZS\nPending balance: {pending_balance} UZS\n\nHow much do you want to withdraw? (Minimum 25000 UZS)\nPlease enter the amount:",
+        "withdraw_min_error": "❌ Minimum withdrawal amount is 25000 UZS.",
+        "withdraw_no_card": "❌ Please add a card first.",
+        "withdraw_success": "✅ Your request to withdraw {amount} UZS has been accepted. It will be transferred to your card shortly.",
+        "withdraw_insufficient": "❌ Insufficient funds in your balance. (You entered: {amount} UZS, Your balance: {balance} UZS)",
+        "withdraw_invalid_amount": "❌ Invalid amount entered. Please enter numbers only.",
 
         # Karta xabarlari (ingliz tilida)
         "btn_add_card": "💳 Add Visa/Mastercard",
@@ -360,6 +374,13 @@ TRANSLATIONS = {
         # Balans xabarlari (rus tilida)
         "profile_balance": "💰 Баланс",
         "profile_pending_balance": "⏳ Ожидаемый баланс",
+        "btn_withdraw": "💸 Снять деньги",
+        "withdraw_prompt": "Текущий баланс: {balance} UZS\nОжидаемый баланс: {pending_balance} UZS\n\nСколько вы хотите снять? (Минимум 25000 UZS)\nПожалуйста, введите сумму:",
+        "withdraw_min_error": "❌ Минимальная сумма для снятия 25000 UZS.",
+        "withdraw_no_card": "❌ Пожалуйста, сначала добавьте карту.",
+        "withdraw_success": "✅ Ваш запрос на вывод {amount} UZS принят. Средства будут зачислены на вашу карту в ближайшее время.",
+        "withdraw_insufficient": "❌ Недостаточно средств на балансе. (Вы ввели: {amount} UZS, Ваш баланс: {balance} UZS)",
+        "withdraw_invalid_amount": "❌ Введена неверная сумма. Пожалуйста, введите только числа.",
 
         # Karta xabarlari (rus tilida)
         "btn_add_card": "💳 Добавить Visa/Mastercard",

@@ -5,7 +5,7 @@ from aiogram.filters import Command
 from aiogram.types import Message
 
 from database import get_user, get_user_language
-from keyboards import get_back_keyboard
+from keyboards import get_back_keyboard, get_profile_keyboard
 from translations import get_text
 
 router = Router()
@@ -40,6 +40,6 @@ async def cmd_profile(message: Message):
 
     await message.answer(
         profile_text,
-        reply_markup=get_back_keyboard(lang),
+        reply_markup=get_profile_keyboard(lang),
         parse_mode="HTML",
     )

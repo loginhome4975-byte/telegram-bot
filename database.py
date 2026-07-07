@@ -164,6 +164,18 @@ async def update_card_number(user_id: int, card_number: str):
     }).eq("user_id", user_id).execute()
 
 
+async def update_balance(user_id: int, new_balance: float):
+    """Foydalanuvchi balansini yangilash.
+
+    Args:
+        user_id: Foydalanuvchi ID raqami
+        new_balance: Yangi balans qiymati
+    """
+    supabase.table("users").update({
+        "balance": new_balance
+    }).eq("user_id", user_id).execute()
+
+
 async def add_guide_page(page_number: int, photo_id: str | None, text_content: str):
     """Qo'llanma sahifasini qo'shish."""
     supabase.table("guide_pages").insert({

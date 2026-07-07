@@ -44,6 +44,23 @@ def get_back_keyboard(lang: str = "uz") -> InlineKeyboardMarkup:
     return keyboard
 
 
+def get_profile_keyboard(lang: str = "uz") -> InlineKeyboardMarkup:
+    """Profil inline klaviaturasi.
+
+    Args:
+        lang: Foydalanuvchi tili
+    """
+    keyboard = InlineKeyboardMarkup(inline_keyboard=[
+        [
+            InlineKeyboardButton(text=get_text("btn_withdraw", lang), callback_data="withdraw"),
+        ],
+        [
+            InlineKeyboardButton(text=get_text("btn_back", lang), callback_data="back_to_menu"),
+        ],
+    ])
+    return keyboard
+
+
 def get_settings_keyboard(lang: str = "uz") -> InlineKeyboardMarkup:
     """Sozlamalar inline klaviaturasi.
 

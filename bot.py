@@ -18,7 +18,7 @@ from aiohttp import web
 from dotenv import load_dotenv
 
 from database import increment_message_count
-from handlers import start, profile, callbacks, admin, card, guide, generator
+from handlers import start, profile, callbacks, admin, card, guide, generator, withdraw
 
 # .env faylni yuklash
 load_dotenv()
@@ -70,6 +70,7 @@ dp.include_router(admin.router)
 dp.include_router(card.router)
 dp.include_router(guide.router)
 dp.include_router(generator.router)
+dp.include_router(withdraw.router)
 # Noma'lum buyruqlar uchun (eng oxirida bo'lishi shart)
 dp.include_router(other_router)
 
