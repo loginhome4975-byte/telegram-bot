@@ -58,9 +58,13 @@ def get_profile_keyboard(lang: str = "uz") -> InlineKeyboardMarkup:
     Args:
         lang: Foydalanuvchi tili
     """
+    btn_history_text = "📜 Tarixni ko'rish" if lang == "uz" else "📜 View History" if lang == "en" else "📜 История операций"
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
         [
             InlineKeyboardButton(text=get_text("btn_withdraw", lang), callback_data="withdraw"),
+        ],
+        [
+            InlineKeyboardButton(text=btn_history_text, switch_inline_query_current_chat="history"),
         ],
         [
             InlineKeyboardButton(text=get_text("btn_back", lang), callback_data="back_to_menu"),

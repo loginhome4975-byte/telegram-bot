@@ -50,6 +50,7 @@ async def callback_profile(callback: CallbackQuery):
             + f"{get_text('profile_balance', lang)}: {user_data.get('balance', 0)} so'm\n"
             + f"{get_text('profile_pending_balance', lang)}: {user_data.get('pending_balance', 0)} so'm\n"
             + f"{get_text('card_current', lang)}: {user_data.get('card_number') or get_text('card_not_set', lang)}\n"
+            + get_text('profile_history_hint', lang)
         )
     else:
         profile_text = get_text("profile_not_found", lang)
