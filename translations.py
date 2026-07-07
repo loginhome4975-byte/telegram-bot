@@ -83,6 +83,64 @@ TRANSLATIONS = {
         # Qo'llanma
         "guide_notice": "\n\n📖 <b>Ishni boshlashdan oldin qo'llanmani ko'rib chiqing:</b>",
         "btn_guide": "📖 Qo'llanma",
+
+        # Generatsiya xabarlari
+        "gen_reg_data": (
+            "📋 <b>Sizning ro'yxatdan o'tish ma'lumotlaringiz:</b>\n\n"
+            "<b>Email address:</b> <code>{email}</code>\n"
+            "<b>Password:</b> <code>{password}</code>\n"
+            "<b>Repeat password:</b> <code>{password}</code>\n"
+            "<b>First name:</b> <code>{first_name}</code>\n"
+            "<b>Last name:</b> <code>{last_name}</code>\n"
+            "<b>Address 1:</b> <code>{address1}</code>\n"
+            "<b>Address 2:</b> <i>(To'ldirilmaydi)</i>\n"
+            "<b>City:</b> <code>{city}</code>\n"
+            "<b>State:</b> <code>{state}</code>\n"
+            "<b>Country:</b> <code>Uzbekistan</code>\n"
+            "<b>Postal code:</b> <code>{postal}</code>\n"
+            "<b>Mobile phone number:</b> <code>{phone}</code>\n"
+            "<b>Account type:</b> <code>Personal</code>\n"
+            "<b>Phone:</b> <i>(To'ldirilmaydi)</i>\n\n"
+            "<i>Ma'lumotlardan foydalanib, rasmdagi formani to'ldiring!</i>"
+        ),
+        "btn_reg_step_1": "✅ To'ldirdim va ro'yxatdan o'tish yakunlandi",
+        "gen_step_2": (
+            "🎉 Muvaffaqiyatli ro'yxatdan o'tganingiz bilan tabriklaymiz!!!\n\n"
+            "Davom etamiz, ehtimol siz rasmdagi holatga yetib keldingiz.\n"
+            "Yetib kelgan bo'lsangiz, ikkinchi rasmda belgilab ko'rsatilgan sariq tugma <b>'Order more'</b> ni bosing."
+        ),
+        "btn_clicked": "✅ Bosdim",
+        "btn_back_nav": "⬅️ Orqaga",
+        "gen_step_3": (
+            "👍 Yaxshi, bosilgan bo'lsa sizda rasmdagi holat ochiladi.\n"
+            "Bu ro'yxatdan belgilab ko'rsatilgani tanlab bosiladi."
+        ),
+        "gen_step_4": "Endi sizda mana bu rasmdagidek to'ldirilmagan holat ochiladi.",
+        "btn_next": "Keyingisi ➡️",
+        "gen_step_5": (
+            "Endi siz bu holatni xuddi rasmdagidek qilib konfiguratsiya qilasiz.\n"
+            "Bunga taxminan 2 daqiqa ketadi.\n\n"
+            "⚠️ <b>Eslataman:</b> Hech narsa rasmdagidan ortiqcha yoki kam bo'lmasligi zarur, hammasi huddi rasmdagidek bo'lsin!"
+        ),
+        "gen_step_6": (
+            "Endi esa ochilgan sahifani biroz pastga tushirasiz (xuddi rasmdagi holat bo'yicha).\n"
+            "Pastga yetib kelganingizda sizdan <b>karta ma'lumotlarini</b> to'ldirish so'raladi.\n\n"
+            "Siz o'sha kartangizning:\n"
+            "🔹 Turini tanlaysiz\n"
+            "🔹 Karta raqamini yozasiz\n"
+            "🔹 Amal qilish muddatini yozasiz\n"
+            "🔹 'Name' joyiga karta egasining ismini yozasiz\n"
+            "🔹 Va orqasidagi 3 xonali tasdiq kodini (CVV) yozasiz\n\n"
+            "Shundan keyin <b>Checkout</b> tugmasini bosasiz. Sizdan 13 000 UZS yechib olinadi (sms kod kelishi yoki avtomatik yechilishi mumkin).\n"
+            "Hammasi bajarilgandan keyin yuqoridan nimadir 'loading' bo'ladi, uning aylanishini kutasiz (taxminan 5-6 daqiqa).\n\n"
+            "Va oxirida yakunlash tugmasini bosasiz."
+        ),
+        "btn_finish": "✅ Yakunlash",
+        "gen_finish": (
+            "🎉 <b>Tashakkur! Barcha bosqichlar muvaffaqiyatli yakunlandi.</b>\n\n"
+            "Sizning kutilayotgan balansingizga <b>{amount} UZS</b> qo'shildi!\n\n"
+            "⏳ Ushbu mablag' tez orada asosiy balansingizga o'tadi, iltimos kuting."
+        ),
     },
 
     "en": {
@@ -166,6 +224,64 @@ TRANSLATIONS = {
         # Qo'llanma (ingliz tilida)
         "guide_notice": "\n\n📖 <b>Please review the guide before starting:</b>",
         "btn_guide": "📖 Guide",
+
+        # Generatsiya xabarlari
+        "gen_reg_data": (
+            "📋 <b>Your registration details:</b>\n\n"
+            "<b>Email address:</b> <code>{email}</code>\n"
+            "<b>Password:</b> <code>{password}</code>\n"
+            "<b>Repeat password:</b> <code>{password}</code>\n"
+            "<b>First name:</b> <code>{first_name}</code>\n"
+            "<b>Last name:</b> <code>{last_name}</code>\n"
+            "<b>Address 1:</b> <code>{address1}</code>\n"
+            "<b>Address 2:</b> <i>(Leave empty)</i>\n"
+            "<b>City:</b> <code>{city}</code>\n"
+            "<b>State:</b> <code>{state}</code>\n"
+            "<b>Country:</b> <code>Uzbekistan</code>\n"
+            "<b>Postal code:</b> <code>{postal}</code>\n"
+            "<b>Mobile phone number:</b> <code>{phone}</code>\n"
+            "<b>Account type:</b> <code>Personal</code>\n"
+            "<b>Phone:</b> <i>(Leave empty)</i>\n\n"
+            "<i>Please use this data to fill out the form shown in the picture!</i>"
+        ),
+        "btn_reg_step_1": "✅ Filled out and registration complete",
+        "gen_step_2": (
+            "🎉 Congratulations on successful registration!!!\n\n"
+            "Let's continue, you probably reached the state shown in the picture.\n"
+            "If so, click the yellow button marked <b>'Order more'</b> in the second picture."
+        ),
+        "btn_clicked": "✅ Clicked",
+        "btn_back_nav": "⬅️ Back",
+        "gen_step_3": (
+            "👍 Great, once clicked you will see the state shown in the picture.\n"
+            "Select the marked item from this list."
+        ),
+        "gen_step_4": "Now an empty state like this picture will open for you.",
+        "btn_next": "Next ➡️",
+        "gen_step_5": (
+            "Now configure this state exactly as shown in the picture.\n"
+            "This will take about 2 minutes.\n\n"
+            "⚠️ <b>Reminder:</b> Nothing should be more or less than in the picture, keep it exactly the same!"
+        ),
+        "gen_step_6": (
+            "Now scroll down the opened page a bit (just like in the picture).\n"
+            "When you get to the bottom, you'll be asked to fill in your <b>card details</b>.\n\n"
+            "For that card, you will:\n"
+            "🔹 Select its type\n"
+            "🔹 Enter the card number\n"
+            "🔹 Enter the expiration date\n"
+            "🔹 Put the cardholder's name in the 'Name' field\n"
+            "🔹 And enter the 3-digit CVV code from the back\n\n"
+            "After that, click <b>Checkout</b>. You will be charged 13,000 UZS (you might receive an SMS code or it may be deducted automatically).\n"
+            "Once everything is done, something will 'load' at the top, wait for it to finish spinning (about 5-6 minutes).\n\n"
+            "And finally, press the finish button."
+        ),
+        "btn_finish": "✅ Finish",
+        "gen_finish": (
+            "🎉 <b>Thank you! All steps have been successfully completed.</b>\n\n"
+            "<b>{amount} UZS</b> has been added to your pending balance!\n\n"
+            "⏳ These funds will be transferred to your main balance shortly, please wait."
+        ),
     },
 
     "ru": {
@@ -249,6 +365,64 @@ TRANSLATIONS = {
         # Qo'llanma (rus tilida)
         "guide_notice": "\n\n📖 <b>Ознакомьтесь с руководством перед началом:</b>",
         "btn_guide": "📖 Руководство",
+
+        # Generatsiya xabarlari
+        "gen_reg_data": (
+            "📋 <b>Ваши регистрационные данные:</b>\n\n"
+            "<b>Email address:</b> <code>{email}</code>\n"
+            "<b>Password:</b> <code>{password}</code>\n"
+            "<b>Repeat password:</b> <code>{password}</code>\n"
+            "<b>First name:</b> <code>{first_name}</code>\n"
+            "<b>Last name:</b> <code>{last_name}</code>\n"
+            "<b>Address 1:</b> <code>{address1}</code>\n"
+            "<b>Address 2:</b> <i>(Не заполняется)</i>\n"
+            "<b>City:</b> <code>{city}</code>\n"
+            "<b>State:</b> <code>{state}</code>\n"
+            "<b>Country:</b> <code>Uzbekistan</code>\n"
+            "<b>Postal code:</b> <code>{postal}</code>\n"
+            "<b>Mobile phone number:</b> <code>{phone}</code>\n"
+            "<b>Account type:</b> <code>Personal</code>\n"
+            "<b>Phone:</b> <i>(Не заполняется)</i>\n\n"
+            "<i>Используйте эти данные, чтобы заполнить форму на картинке!</i>"
+        ),
+        "btn_reg_step_1": "✅ Заполнил и регистрация завершена",
+        "gen_step_2": (
+            "🎉 Поздравляем с успешной регистрацией!!!\n\n"
+            "Продолжаем, вероятно, вы дошли до состояния на картинке.\n"
+            "Если да, нажмите желтую кнопку <b>'Order more'</b>, отмеченную на второй картинке."
+        ),
+        "btn_clicked": "✅ Нажал",
+        "btn_back_nav": "⬅️ Назад",
+        "gen_step_3": (
+            "👍 Отлично, после нажатия откроется состояние на картинке.\n"
+            "Выберите отмеченный пункт из списка."
+        ),
+        "gen_step_4": "Теперь у вас откроется незаполненное состояние, как на этой картинке.",
+        "btn_next": "Далее ➡️",
+        "gen_step_5": (
+            "Теперь настройте это состояние точно так, как на картинке.\n"
+            "Это займет около 2 минут.\n\n"
+            "⚠️ <b>Напоминание:</b> Ничего не должно быть больше или меньше, чем на картинке, всё должно быть точно так же!"
+        ),
+        "gen_step_6": (
+            "Теперь прокрутите открытую страницу немного вниз (как на картинке).\n"
+            "Когда дойдете до низа, вас попросят заполнить <b>данные карты</b>.\n\n"
+            "Для вашей карты вы:\n"
+            "🔹 Выберете тип\n"
+            "🔹 Введете номер карты\n"
+            "🔹 Введете срок действия\n"
+            "🔹 Укажете имя владельца в поле 'Name'\n"
+            "🔹 И введете 3-значный код CVV с обратной стороны\n\n"
+            "После этого нажмите <b>Checkout</b>. С вас будет списано 13 000 UZS (может прийти SMS-код или списаться автоматически).\n"
+            "Когда всё будет готово, сверху что-то начнет 'загружаться', подождите, пока оно перестанет крутиться (около 5-6 минут).\n\n"
+            "И, наконец, нажмите кнопку завершения."
+        ),
+        "btn_finish": "✅ Завершить",
+        "gen_finish": (
+            "🎉 <b>Спасибо! Все этапы успешно завершены.</b>\n\n"
+            "На ваш ожидаемый баланс добавлено <b>{amount} UZS</b>!\n\n"
+            "⏳ Эти средства вскоре поступят на ваш основной баланс, пожалуйста, подождите."
+        ),
     },
 }
 

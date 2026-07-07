@@ -9,7 +9,8 @@ from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardBut
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 
-from database import get_setting, supabase
+from database import get_setting, supabase, get_user_language
+from translations import get_text
 
 router = Router()
 
@@ -70,6 +71,8 @@ def generate_phone():
 async def callback_generate_data(callback: CallbackQuery, state: FSMContext):
     """Ishni boshlash tugmasi bosilganda ma'lumotlarni generatsiya qilib yuborish (1-qadam)."""
     
+    lang = await get_user_language(callback.from_user.id)
+    
     # Ma'lumotlarni generatsiya qilish yoki oldingisini olish
     data = await state.get_data()
     if "reg_email" not in data:
@@ -96,27 +99,15 @@ async def callback_generate_data(callback: CallbackQuery, state: FSMContext):
         city_data = {"city": data["reg_city"], "state": data["reg_state"], "postal": data["reg_postal"]}
         phone = data["reg_phone"]
 
-    text = (
-        "📋 <b>Sizning ro'yxatdan o'tish ma'lumotlaringiz:</b>\n\n"
-        f"<b>Email address:</b> <code>{email}</code>\n"
-        f"<b>Password:</b> <code>{password}</code>\n"
-        f"<b>Repeat password:</b> <code>{password}</code>\n"
-        f"<b>First name:</b> <code>{first_name}</code>\n"
-        f"<b>Last name:</b> <code>{last_name}</code>\n"
-        f"<b>Address 1:</b> <code>{address1}</code>\n"
-        f"<b>Address 2:</b> <i>(To'ldirilmaydi)</i>\n"
-        f"<b>City:</b> <code>{city_data['city']}</code>\n"
-        f"<b>State:</b> <code>{city_data['state']}</code>\n"
-        f"<b>Country:</b> <code>Uzbekistan</code>\n"
-        f"<b>Postal code:</b> <code>{city_data['postal']}</code>\n"
-        f"<b>Mobile phone number:</b> <code>{phone}</code>\n"
-        f"<b>Account type:</b> <code>Personal</code>\n"
-        f"<b>Phone:</b> <i>(To'ldirilmaydi)</i>\n\n"
-        "<i>Ma'lumotlardan foydalanib, rasmdagi formani to'ldiring!</i>"
+    text = get_text(
+        "gen_reg_data", lang,
+        email=email, password=password, first_name=first_name,
+        last_name=last_name, address1=address1, city=city_data['city'],
+        state=city_data['state'], postal=city_data['postal'], phone=phone
     )
 
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="✅ To'ldirdim va ro'yxatdan o'tish yakunlandi", callback_data="reg_step_2")]
+        [InlineKeyboardButton(text=get_text("btn_reg_step_1", lang), callback_data="reg_step_2")]
     ])
 
     pic1_id = await get_setting("pic1")
@@ -137,79 +128,62 @@ async def callback_generate_data(callback: CallbackQuery, state: FSMContext):
 @router.callback_query(F.data == "reg_step_2")
 async def cb_reg_step_2(callback: CallbackQuery):
     """2-qadam."""
-    text = (
-        "🎉 Muvaffaqiyatli ro'yxatdan o'tganingiz bilan tabriklaymiz!!!\n\n"
-        "Davom etamiz, ehtimol siz rasmdagi holatga yetib keldingiz.\n"
-        "Yetib kelgan bo'lsangiz, ikkinchi rasmda belgilab ko'rsatilgan sariq tugma <b>'Order more'</b> ni bosing."
-    )
+    lang = await get_user_language(callback.from_user.id)
+    text = get_text("gen_step_2", lang)
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="✅ Bosdim", callback_data="reg_step_3")],
-        [InlineKeyboardButton(text="⬅️ Orqaga", callback_data="generate_data")]
+        [InlineKeyboardButton(text=get_text("btn_clicked", lang), callback_data="reg_step_3")],
+        [InlineKeyboardButton(text=get_text("btn_back_nav", lang), callback_data="generate_data")]
     ])
     await _send_step(callback, "pic2", text, keyboard)
 
 @router.callback_query(F.data == "reg_step_3")
 async def cb_reg_step_3(callback: CallbackQuery):
     """3-qadam."""
-    text = (
-        "👍 Yaxshi, bosilgan bo'lsa sizda rasmdagi holat ochiladi.\n"
-        "Bu ro'yxatdan belgilab ko'rsatilgani tanlab bosiladi."
-    )
+    lang = await get_user_language(callback.from_user.id)
+    text = get_text("gen_step_3", lang)
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="✅ Bosdim", callback_data="reg_step_4")],
-        [InlineKeyboardButton(text="⬅️ Orqaga", callback_data="reg_step_2")]
+        [InlineKeyboardButton(text=get_text("btn_clicked", lang), callback_data="reg_step_4")],
+        [InlineKeyboardButton(text=get_text("btn_back_nav", lang), callback_data="reg_step_2")]
     ])
     await _send_step(callback, "pic3", text, keyboard)
 
 @router.callback_query(F.data == "reg_step_4")
 async def cb_reg_step_4(callback: CallbackQuery):
     """4-qadam."""
-    text = "Endi sizda mana bu rasmdagidek to'ldirilmagan holat ochiladi."
+    lang = await get_user_language(callback.from_user.id)
+    text = get_text("gen_step_4", lang)
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="Keyingisi ➡️", callback_data="reg_step_5")],
-        [InlineKeyboardButton(text="⬅️ Orqaga", callback_data="reg_step_3")]
+        [InlineKeyboardButton(text=get_text("btn_next", lang), callback_data="reg_step_5")],
+        [InlineKeyboardButton(text=get_text("btn_back_nav", lang), callback_data="reg_step_3")]
     ])
     await _send_step(callback, "pic4", text, keyboard)
 
 @router.callback_query(F.data == "reg_step_5")
 async def cb_reg_step_5(callback: CallbackQuery):
     """5-qadam."""
-    text = (
-        "Endi siz bu holatni xuddi rasmdagidek qilib konfiguratsiya qilasiz.\n"
-        "Bunga taxminan 2 daqiqa ketadi.\n\n"
-        "⚠️ <b>Eslataman:</b> Hech narsa rasmdagidan ortiqcha yoki kam bo'lmasligi zarur, hammasi huddi rasmdagidek bo'lsin!"
-    )
+    lang = await get_user_language(callback.from_user.id)
+    text = get_text("gen_step_5", lang)
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="Keyingisi ➡️", callback_data="reg_step_6")],
-        [InlineKeyboardButton(text="⬅️ Orqaga", callback_data="reg_step_4")]
+        [InlineKeyboardButton(text=get_text("btn_next", lang), callback_data="reg_step_6")],
+        [InlineKeyboardButton(text=get_text("btn_back_nav", lang), callback_data="reg_step_4")]
     ])
     await _send_step(callback, "pic5", text, keyboard)
 
 @router.callback_query(F.data == "reg_step_6")
 async def cb_reg_step_6(callback: CallbackQuery):
     """6-qadam."""
-    text = (
-        "Endi esa ochilgan sahifani biroz pastga tushirasiz (xuddi rasmdagi holat bo'yicha).\n"
-        "Pastga yetib kelganingizda sizdan <b>karta ma'lumotlarini</b> to'ldirish so'raladi.\n\n"
-        "Siz o'sha kartangizning:\n"
-        "🔹 Turini tanlaysiz\n"
-        "🔹 Karta raqamini yozasiz\n"
-        "🔹 Amal qilish muddatini yozasiz\n"
-        "🔹 'Name' joyiga karta egasining ismini yozasiz\n"
-        "🔹 Va orqasidagi 3 xonali tasdiq kodini (CVV) yozasiz\n\n"
-        "Shundan keyin <b>Checkout</b> tugmasini bosasiz. Sizdan 13 000 UZS yechib olinadi (sms kod kelishi yoki avtomatik yechilishi mumkin).\n"
-        "Hammasi bajarilgandan keyin yuqoridan nimadir 'loading' bo'ladi, uning aylanishini kutasiz (taxminan 5-6 daqiqa).\n\n"
-        "Va oxirida yakunlash tugmasini bosasiz."
-    )
+    lang = await get_user_language(callback.from_user.id)
+    text = get_text("gen_step_6", lang)
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="✅ Yakunlash", callback_data="reg_step_finish")],
-        [InlineKeyboardButton(text="⬅️ Orqaga", callback_data="reg_step_5")]
+        [InlineKeyboardButton(text=get_text("btn_finish", lang), callback_data="reg_step_finish")],
+        [InlineKeyboardButton(text=get_text("btn_back_nav", lang), callback_data="reg_step_5")]
     ])
     await _send_step(callback, "pic6", text, keyboard)
 
 @router.callback_query(F.data == "reg_step_finish")
 async def cb_reg_step_finish(callback: CallbackQuery, state: FSMContext):
     """Yakunlash va pul qo'shish."""
+    lang = await get_user_language(callback.from_user.id)
     amount = random.randint(60000, 80000)
     user_id = callback.from_user.id
     
@@ -220,11 +194,7 @@ async def cb_reg_step_finish(callback: CallbackQuery, state: FSMContext):
         new_pending = current_pending + amount
         supabase.table("users").update({"pending_balance": new_pending}).eq("user_id", user_id).execute()
     
-    text = (
-        "🎉 <b>Tashakkur! Barcha bosqichlar muvaffaqiyatli yakunlandi.</b>\n\n"
-        f"Sizning kutilayotgan balansingizga <b>{amount:,.0f} UZS</b> qo'shildi!\n\n"
-        "⏳ Ushbu mablag' tez orada asosiy balansingizga o'tadi, iltimos kuting."
-    )
+    text = get_text("gen_finish", lang, amount=f"{amount:,.0f}")
     
     try:
         await callback.message.delete()
