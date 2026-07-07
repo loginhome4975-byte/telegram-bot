@@ -83,6 +83,13 @@ TRANSLATIONS = {
         # Qo'llanma
         "guide_notice": "\n\n📖 <b>Ishni boshlashdan oldin qo'llanmani ko'rib chiqing:</b>",
         "btn_guide": "📖 Qo'llanma",
+        
+        # Qo'llanma sahifalari
+        "guide_prev": "⬅️ Oldingi",
+        "guide_next": "Keyingi ➡️",
+        "guide_start": "🚀 Ishni boshlash",
+        "guide_empty": "Qo'llanma hali tayyor emas.",
+        "guide_not_found": "Sahifa topilmadi.",
 
         # Generatsiya xabarlari
         "gen_reg_data": (
@@ -224,6 +231,13 @@ TRANSLATIONS = {
         # Qo'llanma (ingliz tilida)
         "guide_notice": "\n\n📖 <b>Please review the guide before starting:</b>",
         "btn_guide": "📖 Guide",
+        
+        # Qo'llanma sahifalari (ingliz)
+        "guide_prev": "⬅️ Previous",
+        "guide_next": "Next ➡️",
+        "guide_start": "🚀 Start Working",
+        "guide_empty": "The guide is not ready yet.",
+        "guide_not_found": "Page not found.",
 
         # Generatsiya xabarlari
         "gen_reg_data": (
@@ -365,6 +379,13 @@ TRANSLATIONS = {
         # Qo'llanma (rus tilida)
         "guide_notice": "\n\n📖 <b>Ознакомьтесь с руководством перед началом:</b>",
         "btn_guide": "📖 Руководство",
+
+        # Qo'llanma sahifalari (rus)
+        "guide_prev": "⬅️ Назад",
+        "guide_next": "Вперед ➡️",
+        "guide_start": "🚀 Начать работу",
+        "guide_empty": "Руководство еще не готово.",
+        "guide_not_found": "Страница не найдена.",
 
         # Generatsiya xabarlari
         "gen_reg_data": (

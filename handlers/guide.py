@@ -17,11 +17,11 @@ def get_guide_keyboard(current_page: int, total_pages: int, lang: str) -> Inline
     
     # Oldingi sahifa tugmasi
     if current_page > 1:
-        buttons.append(InlineKeyboardButton(text="⬅️ Oldingi", callback_data=f"guide_page_{current_page - 1}"))
+        buttons.append(InlineKeyboardButton(text=get_text("guide_prev", lang), callback_data=f"guide_page_{current_page - 1}"))
     
     # Keyingi sahifa tugmasi
     if current_page < total_pages:
-        buttons.append(InlineKeyboardButton(text="Keyingi ➡️", callback_data=f"guide_page_{current_page + 1}"))
+        buttons.append(InlineKeyboardButton(text=get_text("guide_next", lang), callback_data=f"guide_page_{current_page + 1}"))
     
     keyboard = []
     if buttons:
@@ -32,7 +32,7 @@ def get_guide_keyboard(current_page: int, total_pages: int, lang: str) -> Inline
     
     # Agar oxirgi sahifa bo'lsa, "Ishni boshlash" tugmasi chiqadi
     if current_page == total_pages:
-        keyboard.append([InlineKeyboardButton(text="🚀 Ishni boshlash", callback_data="generate_data")])
+        keyboard.append([InlineKeyboardButton(text=get_text("guide_start", lang), callback_data="generate_data")])
     
     # Orqaga (Asosiy menyuga)
     keyboard.append([InlineKeyboardButton(text=get_text("btn_back", lang), callback_data="back_to_menu")])
@@ -47,7 +47,7 @@ async def show_guide_page(callback: CallbackQuery, state: FSMContext):
     
     total_pages = await get_guide_pages_count()
     if total_pages == 0:
-        await callback.answer("Qo'llanma hali tayyor emas.", show_alert=True)
+        await callback.answer(get_text("guide_empty", lang), show_alert=True)
         return
         
     # Sahifani aniqlash
@@ -62,7 +62,7 @@ async def show_guide_page(callback: CallbackQuery, state: FSMContext):
     # Sahifa ma'lumotlarini olish
     page_data = await get_guide_page(page_num)
     if not page_data:
-        await callback.answer("Sahifa topilmadi.", show_alert=True)
+        await callback.answer(get_text("guide_not_found", lang), show_alert=True)
         return
         
     keyboard = get_guide_keyboard(page_num, total_pages, lang)
