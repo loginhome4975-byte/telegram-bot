@@ -99,6 +99,7 @@ TRANSLATIONS = {
         "guide_not_found": "Sahifa topilmadi.",
 
         # Generatsiya xabarlari
+        "already_registered": "❌ Kechirasiz, siz allaqachon ro'yxatdan o'tish vazifasini bajargansiz! Bu ish bir kishiga faqat bir marta beriladi.",
         "gen_reg_data": (
             "📋 <b>Sizning ro'yxatdan o'tish ma'lumotlaringiz:</b>\n\n"
             "<b>Email address:</b> <code>{email}</code>\n"
@@ -254,6 +255,7 @@ TRANSLATIONS = {
         "guide_not_found": "Page not found.",
 
         # Generatsiya xabarlari
+        "already_registered": "❌ Sorry, you have already completed the registration task! This task is given only once per person.",
         "gen_reg_data": (
             "📋 <b>Your registration details:</b>\n\n"
             "<b>Email address:</b> <code>{email}</code>\n"
@@ -409,6 +411,7 @@ TRANSLATIONS = {
         "guide_not_found": "Страница не найдена.",
 
         # Generatsiya xabarlari
+        "already_registered": "❌ Извините, вы уже выполнили задание по регистрации! Это задание выдается только один раз на человека.",
         "gen_reg_data": (
             "📋 <b>Ваши регистрационные данные:</b>\n\n"
             "<b>Email address:</b> <code>{email}</code>\n"

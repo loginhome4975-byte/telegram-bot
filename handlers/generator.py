@@ -9,7 +9,7 @@ from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardBut
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 
-from database import get_setting, supabase, get_user_language, add_user_history
+from database import get_setting, supabase, get_user_language, add_user_history, get_user_history
 from translations import get_text
 
 router = Router()
@@ -89,6 +89,15 @@ async def callback_generate_data(callback: CallbackQuery, state: FSMContext):
     """Ishni boshlash tugmasi bosilganda ma'lumotlarni generatsiya qilib yuborish (1-qadam)."""
     
     lang = await get_user_language(callback.from_user.id)
+    
+    # Oldin bajarilganligini tekshirish
+    history = await get_user_history(callback.from_user.id)
+    has_registered = any(h.get("action_type") == "Ro'yxatdan o'tish" for h in history)
+    
+    if has_registered:
+        await callback.answer(get_text("already_registered", lang), show_alert=True)
+        return
+    
     
     # Ma'lumotlarni generatsiya qilish yoki oldingisini olish
     data = await state.get_data()
