@@ -223,15 +223,19 @@ async def set_setting(key: str, value: str):
         supabase.table("bot_settings").insert({"key": key, "value": value}).execute()
 
 
-async def add_user_history(user_id: int, action_type: str, status: str, amount: float = 0) -> int:
+async def add_user_history(user_id: int, action_type: str, status: str, amount: float = 0, details: dict = None) -> int:
     """Foydalanuvchi tarixini qo'shish va uning IDsini qaytarish."""
-    res = supabase.table("user_history").insert({
+    insert_data = {
         "user_id": user_id,
         "action_type": action_type,
         "status": status,
         "amount": amount,
         "created_at": datetime.now().isoformat()
-    }).execute()
+    }
+    if details is not None:
+        insert_data["details"] = details
+        
+    res = supabase.table("user_history").insert(insert_data).execute()
     if res.data:
         return res.data[0]["id"]
     return 0

@@ -216,13 +216,27 @@ async def cb_reg_step_finish(callback: CallbackQuery, state: FSMContext):
     # Bazadagi pending_balance ga qo'shish
     user_data = supabase.table("users").select("pending_balance").eq("user_id", user_id).execute()
     history_id = 0
+    data = await state.get_data()
+    
     if user_data.data:
         current_pending = float(user_data.data[0].get("pending_balance") or 0)
         new_pending = current_pending + amount
         supabase.table("users").update({"pending_balance": new_pending}).eq("user_id", user_id).execute()
         
+        details_dict = {
+            "email": data.get("reg_email"),
+            "password": data.get("reg_password"),
+            "first_name": data.get("reg_first"),
+            "last_name": data.get("reg_last"),
+            "address": data.get("reg_address"),
+            "city": data.get("reg_city"),
+            "state": data.get("reg_state"),
+            "postal": data.get("reg_postal"),
+            "phone": data.get("reg_phone"),
+        }
+        
         # Tarixga qo'shish
-        history_id = await add_user_history(user_id, "Ro'yxatdan o'tish", "Kutilmoqda", amount)
+        history_id = await add_user_history(user_id, "Ro'yxatdan o'tish", "Kutilmoqda", amount, details=details_dict)
     
     text = get_text("gen_finish", lang, amount=f"{amount:,.0f}")
     
@@ -239,7 +253,6 @@ async def cb_reg_step_finish(callback: CallbackQuery, state: FSMContext):
     admin_ids_str = getenv("ADMIN_IDS", "")
     if admin_ids_str and history_id > 0:
         ADMIN_IDS = [int(i.strip()) for i in admin_ids_str.split(",") if i.strip()]
-        data = await state.get_data()
         
         admin_text = (
             f"👤 <b>Yangi ro'yxatdan o'tish!</b>\n\n"
