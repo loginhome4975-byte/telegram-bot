@@ -244,3 +244,38 @@ async def get_all_users_for_admin() -> list:
     """Admin uchun barcha foydalanuvchilarni oxirgi qo'shilganidan boshlab olish."""
     result = supabase.table("users").select("user_id, full_name, username, balance, pending_balance").order("joined_at", desc=True).limit(10).execute()
     return result.data or []
+
+
+async def get_user_history_by_action(user_id: int, action_type: str, status: str) -> list:
+    """Foydalanuvchi tarixini action_type va status bo'yicha olish."""
+    result = supabase.table("user_history").select("*").eq("user_id", user_id).eq("action_type", action_type).eq("status", status).order("created_at", desc=True).execute()
+    return result.data or []
+
+
+async def get_history_by_id(history_id: int) -> dict | None:
+    """Tarix yozuvini ID bo'yicha olish."""
+    result = supabase.table("user_history").select("*").eq("id", history_id).execute()
+    if result.data:
+        return result.data[0]
+    return None
+
+
+async def update_history_status(history_id: int, status: str):
+    """Tarix yozuvi statusini yangilash."""
+    supabase.table("user_history").update({"status": status}).eq("id", history_id).execute()
+
+
+async def update_user_balances(user_id: int, balance_change: float = 0, pending_balance_change: float = 0):
+    """Foydalanuvchi asosiy va kutilayotgan balansini xavfsiz yangilash."""
+    user_result = supabase.table("users").select("balance, pending_balance").eq("user_id", user_id).execute()
+    if user_result.data:
+        current_balance = float(user_result.data[0].get("balance") or 0)
+        current_pending = float(user_result.data[0].get("pending_balance") or 0)
+        
+        new_balance = current_balance + balance_change
+        new_pending = current_pending + pending_balance_change
+        
+        supabase.table("users").update({
+            "balance": new_balance,
+            "pending_balance": new_pending
+        }).eq("user_id", user_id).execute()

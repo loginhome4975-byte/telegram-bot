@@ -12,7 +12,8 @@ from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, C
 from database import (
     get_users_with_notifications, get_user_language, add_guide_page, 
     clear_guide, get_guide_pages_count, set_setting, get_all_users_for_admin,
-    get_user, get_user_history, supabase
+    get_user, get_user_history, supabase, get_user_history_by_action,
+    update_history_status, update_user_balances, get_history_by_id
 )
 from translations import get_text
 
@@ -272,96 +273,181 @@ async def process_pic(message: Message, state: FSMContext):
     await message.answer(f"✅ <b>{pic_key}</b> muvaffaqiyatli saqlandi! Endi u ro'yxatdan o'tish jarayonida yuboriladi.", parse_mode="HTML")
 
 
-@router.message(Command("edit"))
-async def cmd_edit(message: Message):
-    """/edit buyrug'i - foydalanuvchilarni tahrirlash."""
+@router.message(Command("ok"))
+async def cmd_ok(message: Message):
+    """/ok <user_id> buyrug'i - pul yechishni boshqarish."""
     if message.from_user.id not in ADMIN_IDS:
         return
 
     parts = message.text.split()
     if len(parts) == 1:
-        # Show list of 10 users
-        users = await get_all_users_for_admin()
-        text = "👥 <b>Oxirgi foydalanuvchilar:</b>\n\n"
-        for u in users:
-            text += f"ID: <code>{u['user_id']}</code> - {u['full_name']} (@{u.get('username') or 'yoq'})\n"
-        text += "\n<i>Boshqarish uchun /edit <user_id> deb yozing.</i>"
-        await message.answer(text, parse_mode="HTML")
-    else:
-        user_id_str = parts[1]
-        if not user_id_str.isdigit():
-            await message.answer("❌ Noto'g'ri ID format.")
-            return
-            
-        user_id = int(user_id_str)
-        user = await get_user(user_id)
-        if not user:
-            await message.answer("❌ Foydalanuvchi topilmadi.")
-            return
-            
-        history = await get_user_history(user_id)
+        await message.answer("❌ Foydalanuvchi ID sini kiriting: /ok <user_id>")
+        return
+
+    user_id_str = parts[1]
+    if not user_id_str.isdigit():
+        await message.answer("❌ Noto'g'ri ID format.")
+        return
+
+    user_id = int(user_id_str)
+    
+    history = await get_user_history_by_action(user_id, "Pul yechish", "Kutilmoqda")
+    
+    if not history:
+        await message.answer(f"❌ {user_id} uchun kutilayotgan pul yechish so'rovlari topilmadi.")
+        return
+        
+    for h in history:
+        history_id = h.get("id")
+        amount = h.get("amount", 0)
+        date = h.get("created_at", "")[:19].replace("T", " ")
         
         text = (
-            f"👤 <b>Foydalanuvchi:</b> {user['full_name']}\n"
-            f"🆔 <b>ID:</b> <code>{user['user_id']}</code>\n"
-            f"💰 <b>Asosiy balans:</b> {user.get('balance', 0):,.0f} UZS\n"
-            f"⏳ <b>Kutilayotgan balans:</b> {user.get('pending_balance', 0):,.0f} UZS\n\n"
-            f"📋 <b>Oxirgi amallar:</b>\n"
+            f"💸 <b>Pul yechish so'rovi</b>\n\n"
+            f"🆔 <b>User ID:</b> <code>{user_id}</code>\n"
+            f"💰 <b>Miqdor:</b> {amount:,.0f} UZS\n"
+            f"📅 <b>Sana:</b> {date}"
         )
         
-        for h in history[:5]: # Show last 5
-            text += f"- {h['action_type']} ({h['amount']:,.0f} UZS) - {h['status']}\n"
-            
         keyboard = InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text="✅ Ro'yxatdan o'tishni tasdiqlash", callback_data=f"approve_reg_{user_id}")],
-            [InlineKeyboardButton(text="✅ Pul yechishni tasdiqlash", callback_data=f"approve_withdraw_{user_id}")]
+            [
+                InlineKeyboardButton(text="✅ Tasdiqlandi (Approve)", callback_data=f"withdraw_approve_{history_id}_{user_id}"),
+                InlineKeyboardButton(text="❌ Rad etildi (Reject)", callback_data=f"withdraw_reject_{history_id}_{user_id}")
+            ]
         ])
         
         await message.answer(text, reply_markup=keyboard, parse_mode="HTML")
 
 
-@router.callback_query(F.data.startswith("approve_reg_"))
-async def cb_approve_reg(callback: CallbackQuery):
-    """Kutilayotgan ro'yxatdan o'tish pulini asosiyga o'tkazish."""
-    if callback.from_user.id not in ADMIN_IDS:
-        return
-        
-    user_id = int(callback.data.split("_")[2])
-    user = await get_user(user_id)
-    
-    if not user:
-        await callback.answer("Foydalanuvchi topilmadi.", show_alert=True)
-        return
-        
-    pending = float(user.get("pending_balance") or 0)
-    balance = float(user.get("balance") or 0)
-    
-    if pending <= 0:
-        await callback.answer("Kutilayotgan pul yo'q.", show_alert=True)
-        return
-        
-    new_balance = balance + pending
-    supabase.table("users").update({
-        "balance": new_balance,
-        "pending_balance": 0
-    }).eq("user_id", user_id).execute()
-    
-    # Tarixni yangilash
-    supabase.table("user_history").update({"status": "Tasdiqlandi"}).eq("user_id", user_id).eq("action_type", "Ro'yxatdan o'tish").eq("status", "Kutilmoqda").execute()
-    
-    await callback.answer("Tasdiqlandi!", show_alert=True)
-    await callback.message.edit_text(f"✅ Foydalanuvchi ({user_id}) tasdiqlandi.\nAsosiy balansiga qo'shildi.")
-
-
-@router.callback_query(F.data.startswith("approve_withdraw_"))
-async def cb_approve_withdraw(callback: CallbackQuery):
+@router.callback_query(F.data.startswith("withdraw_approve_"))
+async def cb_withdraw_approve(callback: CallbackQuery):
     """Pul yechishni tasdiqlash."""
     if callback.from_user.id not in ADMIN_IDS:
         return
         
-    user_id = int(callback.data.split("_")[2])
-    # Pul yechish allaqachon balansdan ayirilgan, shunchaki statusni yangilaymiz
-    supabase.table("user_history").update({"status": "Tasdiqlandi"}).eq("user_id", user_id).eq("action_type", "Pul yechish").eq("status", "Kutilmoqda").execute()
+    parts = callback.data.split("_")
+    history_id = int(parts[2])
+    user_id = int(parts[3])
+    
+    await update_history_status(history_id, "Tasdiqlandi")
     
     await callback.answer("Tasdiqlandi!", show_alert=True)
-    await callback.message.edit_text(f"✅ Pul yechish ({user_id}) tasdiqlandi.")
+    await callback.message.edit_text(callback.message.text + "\n\n✅ <b>Holati:</b> Tasdiqlandi")
+
+
+@router.callback_query(F.data.startswith("withdraw_reject_"))
+async def cb_withdraw_reject(callback: CallbackQuery):
+    """Pul yechishni rad etish va pulni qaytarish."""
+    if callback.from_user.id not in ADMIN_IDS:
+        return
+        
+    parts = callback.data.split("_")
+    history_id = int(parts[2])
+    user_id = int(parts[3])
+    
+    history = await get_history_by_id(history_id)
+    if not history or history.get("status") != "Kutilmoqda":
+        await callback.answer("So'rov topilmadi yoki allaqachon ko'rib chiqilgan.", show_alert=True)
+        return
+        
+    amount = float(history.get("amount", 0))
+    
+    await update_history_status(history_id, "Rad etildi")
+    await update_user_balances(user_id, balance_change=amount)
+    
+    await callback.answer("Rad etildi. Pul balansga qaytarildi.", show_alert=True)
+    await callback.message.edit_text(callback.message.text + "\n\n❌ <b>Holati:</b> Rad etildi (Pul balansga qaytarildi)")
+
+
+@router.message(Command("edit"))
+async def cmd_edit(message: Message):
+    """/edit buyrug'i - ro'yxatdan o'tishni tasdiqlash."""
+    if message.from_user.id not in ADMIN_IDS:
+        return
+
+    parts = message.text.split()
+    if len(parts) == 1:
+        await message.answer("❌ Foydalanuvchi ID sini kiriting: /edit <user_id>")
+        return
+
+    user_id_str = parts[1]
+    if not user_id_str.isdigit():
+        await message.answer("❌ Noto'g'ri ID format.")
+        return
+
+    user_id = int(user_id_str)
+    
+    history = await get_user_history_by_action(user_id, "Ro'yxatdan o'tish", "Kutilmoqda")
+    
+    if not history:
+        await message.answer(f"❌ {user_id} uchun kutilayotgan ro'yxatdan o'tish so'rovlari topilmadi.")
+        return
+        
+    for h in history:
+        history_id = h.get("id")
+        amount = h.get("amount", 0)
+        date = h.get("created_at", "")[:19].replace("T", " ")
+        
+        text = (
+            f"👤 <b>Ro'yxatdan o'tish so'rovi</b>\n\n"
+            f"🆔 <b>User ID:</b> <code>{user_id}</code>\n"
+            f"💰 <b>Miqdor:</b> {amount:,.0f} UZS\n"
+            f"📅 <b>Sana:</b> {date}"
+        )
+        
+        keyboard = InlineKeyboardMarkup(inline_keyboard=[
+            [
+                InlineKeyboardButton(text="✅ Asosiy balansga o'tkazish", callback_data=f"reg_approve_{history_id}_{user_id}"),
+                InlineKeyboardButton(text="❌ Rad etish", callback_data=f"reg_reject_{history_id}_{user_id}")
+            ]
+        ])
+        
+        await message.answer(text, reply_markup=keyboard, parse_mode="HTML")
+
+
+@router.callback_query(F.data.startswith("reg_approve_"))
+async def cb_reg_approve(callback: CallbackQuery):
+    """Kutilayotgan ro'yxatdan o'tish pulini asosiyga o'tkazish."""
+    if callback.from_user.id not in ADMIN_IDS:
+        return
+        
+    parts = callback.data.split("_")
+    history_id = int(parts[2])
+    user_id = int(parts[3])
+    
+    history = await get_history_by_id(history_id)
+    if not history or history.get("status") != "Kutilmoqda":
+        await callback.answer("So'rov topilmadi yoki allaqachon ko'rib chiqilgan.", show_alert=True)
+        return
+        
+    amount = float(history.get("amount", 0))
+    
+    await update_history_status(history_id, "Tasdiqlandi")
+    await update_user_balances(user_id, balance_change=amount, pending_balance_change=-amount)
+    
+    await callback.answer("Tasdiqlandi va balansga qo'shildi!", show_alert=True)
+    await callback.message.edit_text(callback.message.text + "\n\n✅ <b>Holati:</b> Tasdiqlandi (Asosiy balansga o'tkazildi)")
+
+
+@router.callback_query(F.data.startswith("reg_reject_"))
+async def cb_reg_reject(callback: CallbackQuery):
+    """Ro'yxatdan o'tishni rad etish va kutilayotgan balansni kamaytirish."""
+    if callback.from_user.id not in ADMIN_IDS:
+        return
+        
+    parts = callback.data.split("_")
+    history_id = int(parts[2])
+    user_id = int(parts[3])
+    
+    history = await get_history_by_id(history_id)
+    if not history or history.get("status") != "Kutilmoqda":
+        await callback.answer("So'rov topilmadi yoki allaqachon ko'rib chiqilgan.", show_alert=True)
+        return
+        
+    amount = float(history.get("amount", 0))
+    
+    await update_history_status(history_id, "Rad etildi")
+    await update_user_balances(user_id, balance_change=0, pending_balance_change=-amount)
+    
+    await callback.answer("Rad etildi va kutilayotgan balansdan ayirildi.", show_alert=True)
+    await callback.message.edit_text(callback.message.text + "\n\n❌ <b>Holati:</b> Rad etildi (Kutilayotgan balansdan ayirildi)")
