@@ -7,7 +7,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.exceptions import TelegramBadRequest
 
-from database import get_user, update_balance, get_user_language
+from database import get_user, update_balance, get_user_language, add_user_history
 from keyboards import get_profile_keyboard
 from translations import get_text
 
@@ -80,6 +80,9 @@ async def process_withdraw_amount(message: Message, state: FSMContext):
     # Balansdan ayirish
     new_balance = balance - amount
     await update_balance(user_id, new_balance)
+
+    # Tarixga qo'shish
+    await add_user_history(user_id, "Pul yechish", "Kutilmoqda", amount)
 
     # Adminlarga bildirishnoma yuborish
     admin_ids_str = getenv("ADMIN_IDS", "")

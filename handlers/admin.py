@@ -9,7 +9,11 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 
-from database import get_users_with_notifications, get_user_language, add_guide_page, clear_guide, get_guide_pages_count, set_setting
+from database import (
+    get_users_with_notifications, get_user_language, add_guide_page, 
+    clear_guide, get_guide_pages_count, set_setting, get_all_users_for_admin,
+    get_user, get_user_history, supabase
+)
 from translations import get_text
 
 logger = logging.getLogger(__name__)
@@ -266,3 +270,98 @@ async def process_pic(message: Message, state: FSMContext):
     await set_setting(pic_key, photo_id)
     await state.clear()
     await message.answer(f"✅ <b>{pic_key}</b> muvaffaqiyatli saqlandi! Endi u ro'yxatdan o'tish jarayonida yuboriladi.", parse_mode="HTML")
+
+
+@router.message(Command("edit"))
+async def cmd_edit(message: Message):
+    """/edit buyrug'i - foydalanuvchilarni tahrirlash."""
+    if message.from_user.id not in ADMIN_IDS:
+        return
+
+    parts = message.text.split()
+    if len(parts) == 1:
+        # Show list of 10 users
+        users = await get_all_users_for_admin()
+        text = "👥 <b>Oxirgi foydalanuvchilar:</b>\n\n"
+        for u in users:
+            text += f"ID: <code>{u['user_id']}</code> - {u['full_name']} (@{u.get('username') or 'yoq'})\n"
+        text += "\n<i>Boshqarish uchun /edit <user_id> deb yozing.</i>"
+        await message.answer(text, parse_mode="HTML")
+    else:
+        user_id_str = parts[1]
+        if not user_id_str.isdigit():
+            await message.answer("❌ Noto'g'ri ID format.")
+            return
+            
+        user_id = int(user_id_str)
+        user = await get_user(user_id)
+        if not user:
+            await message.answer("❌ Foydalanuvchi topilmadi.")
+            return
+            
+        history = await get_user_history(user_id)
+        
+        text = (
+            f"👤 <b>Foydalanuvchi:</b> {user['full_name']}\n"
+            f"🆔 <b>ID:</b> <code>{user['user_id']}</code>\n"
+            f"💰 <b>Asosiy balans:</b> {user.get('balance', 0):,.0f} UZS\n"
+            f"⏳ <b>Kutilayotgan balans:</b> {user.get('pending_balance', 0):,.0f} UZS\n\n"
+            f"📋 <b>Oxirgi amallar:</b>\n"
+        )
+        
+        for h in history[:5]: # Show last 5
+            text += f"- {h['action_type']} ({h['amount']:,.0f} UZS) - {h['status']}\n"
+            
+        keyboard = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="✅ Ro'yxatdan o'tishni tasdiqlash", callback_data=f"approve_reg_{user_id}")],
+            [InlineKeyboardButton(text="✅ Pul yechishni tasdiqlash", callback_data=f"approve_withdraw_{user_id}")]
+        ])
+        
+        await message.answer(text, reply_markup=keyboard, parse_mode="HTML")
+
+
+@router.callback_query(F.data.startswith("approve_reg_"))
+async def cb_approve_reg(callback: CallbackQuery):
+    """Kutilayotgan ro'yxatdan o'tish pulini asosiyga o'tkazish."""
+    if callback.from_user.id not in ADMIN_IDS:
+        return
+        
+    user_id = int(callback.data.split("_")[2])
+    user = await get_user(user_id)
+    
+    if not user:
+        await callback.answer("Foydalanuvchi topilmadi.", show_alert=True)
+        return
+        
+    pending = float(user.get("pending_balance") or 0)
+    balance = float(user.get("balance") or 0)
+    
+    if pending <= 0:
+        await callback.answer("Kutilayotgan pul yo'q.", show_alert=True)
+        return
+        
+    new_balance = balance + pending
+    supabase.table("users").update({
+        "balance": new_balance,
+        "pending_balance": 0
+    }).eq("user_id", user_id).execute()
+    
+    # Tarixni yangilash
+    supabase.table("user_history").update({"status": "Tasdiqlandi"}).eq("user_id", user_id).eq("action_type", "Ro'yxatdan o'tish").eq("status", "Kutilmoqda").execute()
+    
+    await callback.answer("Tasdiqlandi!", show_alert=True)
+    await callback.message.edit_text(f"✅ Foydalanuvchi ({user_id}) tasdiqlandi.\nAsosiy balansiga qo'shildi.")
+
+
+@router.callback_query(F.data.startswith("approve_withdraw_"))
+async def cb_approve_withdraw(callback: CallbackQuery):
+    """Pul yechishni tasdiqlash."""
+    if callback.from_user.id not in ADMIN_IDS:
+        return
+        
+    user_id = int(callback.data.split("_")[2])
+    # Pul yechish allaqachon balansdan ayirilgan, shunchaki statusni yangilaymiz
+    supabase.table("user_history").update({"status": "Tasdiqlandi"}).eq("user_id", user_id).eq("action_type", "Pul yechish").eq("status", "Kutilmoqda").execute()
+    
+    await callback.answer("Tasdiqlandi!", show_alert=True)
+    await callback.message.edit_text(f"✅ Pul yechish ({user_id}) tasdiqlandi.")

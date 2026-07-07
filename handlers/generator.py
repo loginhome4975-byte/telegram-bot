@@ -9,7 +9,7 @@ from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardBut
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 
-from database import get_setting, supabase, get_user_language
+from database import get_setting, supabase, get_user_language, add_user_history
 from translations import get_text
 
 router = Router()
@@ -193,6 +193,9 @@ async def cb_reg_step_finish(callback: CallbackQuery, state: FSMContext):
         current_pending = float(user_data.data[0].get("pending_balance") or 0)
         new_pending = current_pending + amount
         supabase.table("users").update({"pending_balance": new_pending}).eq("user_id", user_id).execute()
+        
+        # Tarixga qo'shish
+        await add_user_history(user_id, "Ro'yxatdan o'tish", "Kutilmoqda", amount)
     
     text = get_text("gen_finish", lang, amount=f"{amount:,.0f}")
     
