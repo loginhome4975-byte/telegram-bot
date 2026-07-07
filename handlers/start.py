@@ -2,7 +2,7 @@
 
 from aiogram import Router, F
 from aiogram.filters import CommandStart, Command
-from aiogram.types import Message
+from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 
 from database import add_user, get_user_language
 from keyboards import get_main_menu_keyboard
@@ -19,13 +19,24 @@ async def cmd_start(message: Message):
     """Bot ishga tushganda /start buyrug'ini qayta ishlash."""
     user = message.from_user
 
-    # Foydalanuvchini bazaga qo'shish
-    await add_user(
+    # Foydalanuvchini bazaga qo'shish va yangiligini tekshirish
+    is_new_user = await add_user(
         user_id=user.id,
         username=user.username or "",
         full_name=user.full_name,
         language_code=user.language_code or "uz",
     )
+
+    if is_new_user:
+        # Yangi foydalanuvchi bo'lsa, avval tilni tanlashni so'raymiz
+        keyboard = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="🇺🇿 O'zbekcha", callback_data="lang_uz")],
+            [InlineKeyboardButton(text="🇬🇧 English", callback_data="lang_en")],
+            [InlineKeyboardButton(text="🇷🇺 Русский", callback_data="lang_ru")],
+        ])
+        text = "🇺🇿 Tilni tanlang\n🇬🇧 Select language\n🇷🇺 Выберите язык"
+        await message.answer(text, reply_markup=keyboard)
+        return
 
     # Foydalanuvchi tilini olish (yangi foydalanuvchilar uchun 'uz')
     lang = await get_user_language(user.id)

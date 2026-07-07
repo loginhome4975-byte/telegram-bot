@@ -31,8 +31,9 @@ supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 # - text_content (text)
 
 
-async def add_user(user_id: int, username: str, full_name: str, language_code: str):
-    """Yangi foydalanuvchini bazaga qo'shish yoki mavjudini yangilash."""
+async def add_user(user_id: int, username: str, full_name: str, language_code: str) -> bool:
+    """Yangi foydalanuvchini bazaga qo'shish yoki mavjudini yangilash. 
+    Yangi foydalanuvchi bo'lsa True qaytaradi."""
     user_data = {
         "user_id": user_id,
         "username": username,
@@ -50,11 +51,12 @@ async def add_user(user_id: int, username: str, full_name: str, language_code: s
         supabase.table("users").update({
             "username": username,
             "full_name": full_name,
-            "language_code": language_code,
         }).eq("user_id", user_id).execute()
+        return False
     else:
         # Yangi foydalanuvchi qo'shish
         supabase.table("users").insert(user_data).execute()
+        return True
 
 
 async def get_user(user_id: int) -> dict | None:
