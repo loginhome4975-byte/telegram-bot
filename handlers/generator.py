@@ -22,13 +22,24 @@ class RegistrationStates(StatesGroup):
 FIRST_NAMES = [
     "Aziz", "Sardor", "Nodir", "Alisher", "Bekzod", "Rustam", "Jasur", "Timur",
     "Dilshod", "Sherzod", "Malika", "Zarina", "Nigora", "Shahnoza", "Dildora",
-    "Nilufar", "Umida", "Gulnoza", "Sevara", "Madina"
+    "Nilufar", "Umida", "Gulnoza", "Sevara", "Madina",
+    "Akmal", "Bobur", "Davron", "Elyor", "Farhod", "Hasan", "Husan", "Islom", 
+    "Jamshid", "Komil", "Laziz", "Murod", "Otabek", "Qodir", "Ravshan", "Shavkat",
+    "Tohir", "Ulugbek", "Vohid", "Xurshid", "Zafar", "Asal", "Barno", "Charos",
+    "Dinara", "Feruza", "Hilola", "Iroda", "Jamila", "Kamola", "Laylo", "Muhlisa",
+    "Nigina", "Oydin", "Sitora", "Vazira", "Xolida", "Yulduz", "Zebo"
 ]
 
 LAST_NAMES = [
     "Karimov", "Abdullayev", "Rahimov", "Nazarov", "Yusupov", "Ibragimov", 
     "Sodiqov", "Turdiyev", "Jalilov", "Qosimov", "Karimova", "Abdullayeva",
-    "Rahimova", "Nazarova", "Yusupova", "Ibragimova"
+    "Rahimova", "Nazarova", "Yusupova", "Ibragimova",
+    "Bozorov", "Davlatov", "Ergashev", "Farmonov", "Hakimov", "Ismoilov", 
+    "Jo'rayev", "Latipov", "Mahmudov", "Nuriddinov", "Obidov", "Qodirov", 
+    "Razzoqov", "Saidov", "To'rayev", "Umarov", "Vahobov", "Xalilov", "Yo'ldoshev", "Zokirov",
+    "Bozorova", "Davlatova", "Ergasheva", "Farmonova", "Hakimova", "Ismoilova", 
+    "Jo'rayeva", "Latipova", "Mahmudova", "Nuriddinova", "Obidova", "Qodirova", 
+    "Razzoqova", "Saidova", "To'rayeva", "Umarova", "Vahobova", "Xalilova", "Yo'ldosheva", "Zokirova"
 ]
 
 CITIES_DATA = [
@@ -50,7 +61,13 @@ CITIES_DATA = [
 STREETS = [
     "Navoi street", "Amir Temur avenue", "Mirzo Ulugbek street", 
     "Pushkin street", "Tashkent street", "Shota Rustaveli street",
-    "Mukimi street", "Furkat street", "Buyuk Ipak Yuli"
+    "Mukimi street", "Furkat street", "Buyuk Ipak Yuli",
+    "Mustaqillik avenue", "Chilonzor street", "Yunusobod street", 
+    "Sergeli street", "Yashnobod street", "Yakkasaroy street", 
+    "Shayxontohur street", "Olmazor street", "Uchtepa street", 
+    "Bektemir street", "Qoratosh street", "Sebzor street", 
+    "Qibray street", "Zangiota street", "Keles street",
+    "Sharaf Rashidov avenue", "Lutfiy street", "Farg'ona yo'li"
 ]
 
 PHONE_PREFIXES = ["90", "91", "93", "94", "97", "98", "99", "33", "88", "77", "55"]
@@ -82,7 +99,7 @@ async def callback_generate_data(callback: CallbackQuery, state: FSMContext):
         city_data = random.choice(CITIES_DATA)
         address1 = f"{random.choice(STREETS)}, {random.randint(1, 150)}"
         phone = generate_phone()
-        email = f"{first_name.lower()}.{last_name.lower()}{random.randint(100, 999)}@gmail.com"
+        email = f"{first_name.lower()}.{last_name.lower()}{random.randint(10, 999)}@traffix.uz"
         
         await state.update_data(
             reg_email=email, reg_password=password, reg_first=first_name,
