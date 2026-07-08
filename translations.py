@@ -8,9 +8,10 @@ TRANSLATIONS = {
         "main_menu": "🏠 Asosiy menyu\n\nQuyidagi tugmalardan birini tanlang:",
         "info_text": (
             "Assalomu alaykum.\n\n"
-            "Bu bot hosting xizmatlari uchun beriladigan bepul va vaqtinchalik imkoniyatlardan foydalanib bizu sizga beriladigan resurslarni naxtlashtirish maqsidida ish yurityapti. "
-            "Sizda o'zingiz bilmaydigan imkonoyatlar mavjud. Bu imkoniyatlarni biz oylaymizki sizga kerak bolmaganligi uchun pulga aylantirib berishdan mamnunmiz. "
-            "Agar bot sizga vazifa bajargansiz deb javob qaytarsa yangi kvotalar kelishini kuting va xabar yuborishimiz uchun bildirishnoma funksiyasini yoqib qoying."
+            "Ushbu bot xalqaro xosting xizmatlari tomonidan taqdim etiladigan bepul va vaqtinchalik imkoniyatlardan foydalangan holda, resurslarni naqdlashtirish maqsadida faoliyat yuritadi. "
+            "Aksariyat foydalanuvchilar o'zlaridagi bunday imkoniyatlar haqida bilishmaydi. Biz bu bepul resurslarni sizning o'rningizga faollashtiramiz va evaziga sizga qonuniy daromad to'laymiz.\n\n"
+            "Agar bot sizga \"vazifa bajarilgan\" deb javob qaytarsa, demak joriy imkoniyatdan foydalanib bo'lingan. Yangi imkoniyatlar (kvotalar) ochilishini kuting. "
+            "Yangi vazifalar kelganda darhol xabar topish uchun \"Bildirishnomalar\" bo'limidan xabarnomalarni yoqib qo'yishni unutmang!"
         ),
         "understood_thanks": "Tashakkur! Barchasi tushunarli bo'lsa, davom etishingiz mumkin.",
         "unknown_command": "Noma'lum buyruq. Iltimos, menyudan foydalaning.",
@@ -162,9 +163,10 @@ TRANSLATIONS = {
         "main_menu": "🏠 Main Menu\n\nSelect one of the buttons below:",
         "info_text": (
             "Hello.\n\n"
-            "This bot operates to monetize the free and temporary resources provided to you and us by hosting services. "
-            "You have opportunities you might not be aware of. We are happy to convert these opportunities into money for you, assuming you don't need them. "
-            "If the bot replies that you have already completed the task, please wait for new quotas to arrive and make sure to turn on the notification function so we can inform you."
+            "This bot operates to monetize the free and temporary resources provided by global hosting services. "
+            "Most users are unaware they possess these opportunities. We activate these free resources on your behalf and pay you a legitimate income in return.\n\n"
+            "If the bot tells you that you have already completed the task, it means your current opportunity has been fully utilized. Please wait for new quotas to arrive. "
+            "To be instantly informed when new tasks become available, don't forget to enable alerts in the \"Notifications\" section!"
         ),
         "understood_thanks": "Thank you! You can continue using the bot.",
         "unknown_command": "Unknown command. Please use the menu.",
@@ -316,9 +318,10 @@ TRANSLATIONS = {
         "main_menu": "🏠 Главное меню\n\nВыберите одну из кнопок ниже:",
         "info_text": (
             "Здравствуйте.\n\n"
-            "Этот бот работает с целью монетизации бесплатных и временных ресурсов, предоставляемых нам и вам хостинговыми услугами. "
-            "У вас есть возможности, о которых вы можете не знать. Мы рады превратить эти возможности в деньги для вас, предполагая, что они вам не нужны. "
-            "Если бот ответит, что вы уже выполнили задание, пожалуйста, подождите поступления новых квот и включите функцию уведомлений, чтобы мы могли отправить вам сообщение."
+            "Этот бот работает с целью монетизации бесплатных и временных ресурсов, предоставляемых международными хостинговыми сервисами. "
+            "Большинство пользователей не знают о наличии у них таких возможностей. Мы активируем эти бесплатные ресурсы от вашего имени и взамен выплачиваем вам законный доход.\n\n"
+            "Если бот отвечает, что вы уже выполнили задание, это означает, что ваша текущая возможность полностью использована. Пожалуйста, дождитесь появления новых квот. "
+            "Чтобы мгновенно узнавать о новых заданиях, не забудьте включить оповещения в разделе «Уведомления»!"
         ),
         "understood_thanks": "Спасибо! Вы можете продолжать использовать бота.",
         "unknown_command": "Неизвестная команда. Пожалуйста, используйте меню.",
