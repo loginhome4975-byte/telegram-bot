@@ -21,6 +21,7 @@ from keyboards import (
     get_settings_keyboard,
     get_language_keyboard,
     get_notifications_keyboard,
+    get_info_keyboard,
 )
 from translations import get_text
 from os import getenv
@@ -85,19 +86,33 @@ async def callback_stats(callback: CallbackQuery):
     await callback.answer()
 
 
-@router.callback_query(F.data == "help")
-async def callback_help(callback: CallbackQuery):
-    """Yordam tugmasi bosilganda."""
+@router.callback_query(F.data == "info")
+async def callback_info(callback: CallbackQuery):
+    """Haqida tugmasi bosilganda."""
     # Foydalanuvchi tilini olish
     lang = await get_user_language(callback.from_user.id)
 
-    # Tarjima qilingan yordam matnini olish
-    help_text = get_text("help_text", lang)
+    # Tarjima qilingan info matnini olish
+    info_text = get_text("info_text", lang)
 
     await callback.message.edit_text(
-        help_text, reply_markup=get_back_keyboard(lang), parse_mode="HTML"
+        info_text, reply_markup=get_info_keyboard(lang), parse_mode="HTML"
     )
     await callback.answer()
+
+@router.callback_query(F.data == "understood")
+async def callback_understood(callback: CallbackQuery):
+    """Tushundim tugmasi bosilganda."""
+    lang = await get_user_language(callback.from_user.id)
+    is_admin = callback.from_user.id in ADMIN_IDS
+    text = get_text("understood_thanks", lang)
+    await callback.answer(text, show_alert=True)
+    
+    # Asosiy menyuni qayta chiqarish
+    menu_text = get_text("main_menu", lang)
+    await callback.message.edit_text(
+        menu_text, reply_markup=get_main_menu_keyboard(lang, is_admin), parse_mode="HTML"
+    )
 
 
 @router.callback_query(F.data == "settings")

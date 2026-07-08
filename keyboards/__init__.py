@@ -19,7 +19,7 @@ def get_main_menu_keyboard(lang: str = "uz", is_admin: bool = False) -> InlineKe
     keyboard_layout = [
         first_row,
         [
-            InlineKeyboardButton(text=get_text("btn_help", lang), callback_data="help"),
+            InlineKeyboardButton(text=get_text("btn_info", lang), callback_data="info"),
             InlineKeyboardButton(text=get_text("btn_settings", lang), callback_data="settings"),
         ]
     ]
@@ -45,6 +45,19 @@ def get_back_keyboard(lang: str = "uz") -> InlineKeyboardMarkup:
         lang: Foydalanuvchi tili
     """
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
+        [
+            InlineKeyboardButton(text=get_text("btn_back", lang), callback_data="back_to_menu"),
+        ],
+    ])
+    return keyboard
+
+
+def get_info_keyboard(lang: str = "uz") -> InlineKeyboardMarkup:
+    """Haqida (Info) klaviaturasi."""
+    keyboard = InlineKeyboardMarkup(inline_keyboard=[
+        [
+            InlineKeyboardButton(text=get_text("btn_understood", lang), callback_data="understood"),
+        ],
         [
             InlineKeyboardButton(text=get_text("btn_back", lang), callback_data="back_to_menu"),
         ],

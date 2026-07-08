@@ -6,16 +6,14 @@ TRANSLATIONS = {
         # Asosiy xabarlar
         "welcome": "👋 Assalomu alaykum, {name}!\n\n🤖 Botimizga xush kelibsiz!\nQuyidagi menyudan kerakli bo'limni tanlang:",
         "main_menu": "🏠 Asosiy menyu\n\nQuyidagi tugmalardan birini tanlang:",
-        "help_text": (
-            "📚 <b>Yordam bo'limi</b>\n\n"
-            "🔹 /start - Botni ishga tushirish\n"
-            "🔹 /help - Yordam olish\n"
-            "🔹 /profile - Mening profilim\n"
-            "🔹 /stats - Statistika\n"
-            "🔹 /settings - Sozlamalar\n"
-            "🔹 /lang - Tilni o'zgartirish\n\n"
-            "❓ Savollaringiz bo'lsa, adminlarga murojaat qiling."
+        "info_text": (
+            "Assalomu alaykum.\n\n"
+            "Bu bot hosting xizmatlari uchun beriladigan bepul va vaqtinchalik imkoniyatlardan foydalanib bizu sizga beriladigan resurslarni naxtlashtirish maqsidida ish yurityapti. "
+            "Sizda o'zingiz bilmaydigan imkonoyatlar mavjud. Bu imkoniyatlarni biz oylaymizki sizga kerak bolmaganligi uchun pulga aylantirib berishdan mamnunmiz. "
+            "Agar bot sizga vazifa bajargansiz deb javob qaytarsa yangi kvotalar kelishini kuting va xabar yuborishimiz uchun bildirishnoma funksiyasini yoqib qoying."
         ),
+        "understood_thanks": "Tashakkur! Barchasi tushunarli bo'lsa, davom etishingiz mumkin.",
+        "unknown_command": "Noma'lum buyruq. Iltimos, menyudan foydalaning.",
 
         # Profil xabarlari
         "profile_title": "👤 <b>Mening profilim</b>\n",
@@ -36,7 +34,6 @@ TRANSLATIONS = {
         "settings_title": "⚙️ <b>Sozlamalar</b>\n\nQuyidagi sozlamalardan birini tanlang:",
         "change_lang_title": "🌐 <b>Tilni tanlang:</b>",
         "lang_changed": "✅ Til muvaffaqiyatli o'zgartirildi!",
-        "unknown_command": "🤷 Noma'lum buyruq. /help ni bosing.",
 
         # Bildirishnomalar
         "notifications_title": "🔔 <b>Bildirishnomalar sozlamalari</b>\n\nBildirishnomalarni yoqish yoki o'chirish:",
@@ -52,10 +49,11 @@ TRANSLATIONS = {
         # Tugma matnlari
         "btn_profile": "👤 Mening profilim",
         "btn_stats": "📊 Statistika",
-        "btn_help": "ℹ️ Yordam",
+        "btn_info": "ℹ️ Haqida",
         "btn_settings": "⚙️ Sozlamalar",
-        "btn_channel": "📢 Kanal",
-        "btn_back": "🔙 Orqaga",
+        "btn_channel": "📢 Kanalimiz",
+        "btn_back": "⬅️ Orqaga",
+        "btn_understood": "✅ Tushundim",
         "btn_change_lang": "🌐 Tilni o'zgartirish",
         "btn_notifications": "🔔 Bildirishnomalar",
         "btn_notif_on": "🔔 Yoqish",
@@ -162,16 +160,14 @@ TRANSLATIONS = {
         # Asosiy xabarlar (ingliz tilida)
         "welcome": "👋 Hello, {name}!\n\n🤖 Welcome to our bot!\nChoose from the menu below:",
         "main_menu": "🏠 Main Menu\n\nSelect one of the buttons below:",
-        "help_text": (
-            "📚 <b>Help Section</b>\n\n"
-            "🔹 /start - Start the bot\n"
-            "🔹 /help - Get help\n"
-            "🔹 /profile - My profile\n"
-            "🔹 /stats - Statistics\n"
-            "🔹 /settings - Settings\n"
-            "🔹 /lang - Change language\n\n"
-            "❓ If you have questions, contact the admins."
+        "info_text": (
+            "Hello.\n\n"
+            "This bot operates to monetize the free and temporary resources provided to you and us by hosting services. "
+            "You have opportunities you might not be aware of. We are happy to convert these opportunities into money for you, assuming you don't need them. "
+            "If the bot replies that you have already completed the task, please wait for new quotas to arrive and make sure to turn on the notification function so we can inform you."
         ),
+        "understood_thanks": "Thank you! You can continue using the bot.",
+        "unknown_command": "Unknown command. Please use the menu.",
 
         # Profil xabarlari (ingliz tilida)
         "profile_title": "👤 <b>My Profile</b>\n",
@@ -192,7 +188,6 @@ TRANSLATIONS = {
         "settings_title": "⚙️ <b>Settings</b>\n\nSelect a setting below:",
         "change_lang_title": "🌐 <b>Choose your language:</b>",
         "lang_changed": "✅ Language changed successfully!",
-        "unknown_command": "🤷 Unknown command. Press /help.",
 
         # Bildirishnomalar (ingliz tilida)
         "notifications_title": "🔔 <b>Notification Settings</b>\n\nEnable or disable notifications:",
@@ -208,10 +203,11 @@ TRANSLATIONS = {
         # Tugma matnlari (ingliz tilida)
         "btn_profile": "👤 My Profile",
         "btn_stats": "📊 Statistics",
-        "btn_help": "ℹ️ Help",
+        "btn_info": "ℹ️ Info",
         "btn_settings": "⚙️ Settings",
-        "btn_channel": "📢 Channel",
+        "btn_channel": "📢 Our Channel",
         "btn_back": "🔙 Back",
+        "btn_understood": "✅ Understood",
         "btn_change_lang": "🌐 Change Language",
         "btn_notifications": "🔔 Notifications",
         "btn_notif_on": "🔔 Enable",
@@ -318,16 +314,14 @@ TRANSLATIONS = {
         # Asosiy xabarlar (rus tilida)
         "welcome": "👋 Здравствуйте, {name}!\n\n🤖 Добро пожаловать в наш бот!\nВыберите из меню ниже:",
         "main_menu": "🏠 Главное меню\n\nВыберите одну из кнопок ниже:",
-        "help_text": (
-            "📚 <b>Раздел помощи</b>\n\n"
-            "🔹 /start - Запустить бота\n"
-            "🔹 /help - Получить помощь\n"
-            "🔹 /profile - Мой профиль\n"
-            "🔹 /stats - Статистика\n"
-            "🔹 /settings - Настройки\n"
-            "🔹 /lang - Изменить язык\n\n"
-            "❓ Если есть вопросы, обратитесь к администраторам."
+        "info_text": (
+            "Здравствуйте.\n\n"
+            "Этот бот работает с целью монетизации бесплатных и временных ресурсов, предоставляемых нам и вам хостинговыми услугами. "
+            "У вас есть возможности, о которых вы можете не знать. Мы рады превратить эти возможности в деньги для вас, предполагая, что они вам не нужны. "
+            "Если бот ответит, что вы уже выполнили задание, пожалуйста, подождите поступления новых квот и включите функцию уведомлений, чтобы мы могли отправить вам сообщение."
         ),
+        "understood_thanks": "Спасибо! Вы можете продолжать использовать бота.",
+        "unknown_command": "Неизвестная команда. Пожалуйста, используйте меню.",
 
         # Profil xabarlari (rus tilida)
         "profile_title": "👤 <b>Мой профиль</b>\n",
@@ -348,7 +342,6 @@ TRANSLATIONS = {
         "settings_title": "⚙️ <b>Настройки</b>\n\nВыберите настройку ниже:",
         "change_lang_title": "🌐 <b>Выберите язык:</b>",
         "lang_changed": "✅ Язык успешно изменён!",
-        "unknown_command": "🤷 Неизвестная команда. Нажмите /help.",
 
         # Bildirishnomalar (rus tilida)
         "notifications_title": "🔔 <b>Настройки уведомлений</b>\n\nВключить или отключить уведомления:",
@@ -364,10 +357,11 @@ TRANSLATIONS = {
         # Tugma matnlari (rus tilida)
         "btn_profile": "👤 Мой профиль",
         "btn_stats": "📊 Статистика",
-        "btn_help": "ℹ️ Помощь",
+        "btn_info": "ℹ️ О нас",
         "btn_settings": "⚙️ Настройки",
-        "btn_channel": "📢 Канал",
-        "btn_back": "🔙 Назад",
+        "btn_channel": "📢 Наш канал",
+        "btn_back": "⬅️ Назад",
+        "btn_understood": "✅ Понятно",
         "btn_change_lang": "🌐 Изменить язык",
         "btn_notifications": "🔔 Уведомления",
         "btn_notif_on": "🔔 Включить",
