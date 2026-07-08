@@ -28,6 +28,9 @@ def get_main_menu_keyboard(lang: str = "uz", is_admin: bool = False) -> InlineKe
         keyboard_layout.append(
             [InlineKeyboardButton(text="📁 Ishlar ro'yxati", callback_data="admin_tasks")]
         )
+        keyboard_layout.append(
+            [InlineKeyboardButton(text="✅ Barcha so'rovlar", switch_inline_query_current_chat="ok")]
+        )
         
     keyboard_layout.extend([
         [InlineKeyboardButton(text=get_text("btn_guide", lang), callback_data="guide")],
