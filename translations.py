@@ -26,7 +26,6 @@ TRANSLATIONS = {
         "profile_joined": "📅 Qo'shilgan sana",
         "profile_messages": "💬 Xabarlar soni",
         "profile_not_found": "😔 Profil topilmadi. /start buyrug'ini yuboring.",
-        "profile_history_hint": "\n💡 <i>Hisob harakatlar tarixini ko'rish uchun pastdagi tugmani bosing yoki chatga</i> <code>@soqqali_joyi_bot history</code> <i>deb yozing.</i>",
 
         # Statistika xabarlari
         "stats_title": "📊 <b>Statistika</b>\n",
@@ -183,7 +182,6 @@ TRANSLATIONS = {
         "profile_joined": "📅 Joined",
         "profile_messages": "💬 Messages",
         "profile_not_found": "😔 Profile not found. Send /start command.",
-        "profile_history_hint": "\n💡 <i>To see your transaction history, click the button below or type</i> <code>@soqqali_joyi_bot history</code> <i>in the chat.</i>",
 
         # Statistika xabarlari (ingliz tilida)
         "stats_title": "📊 <b>Statistics</b>\n",
@@ -340,7 +338,6 @@ TRANSLATIONS = {
         "profile_joined": "📅 Дата регистрации",
         "profile_messages": "💬 Сообщений",
         "profile_not_found": "😔 Профиль не найден. Отправьте команду /start.",
-        "profile_history_hint": "\n💡 <i>Чтобы увидеть историю операций, нажмите кнопку ниже или напишите</i> <code>@soqqali_joyi_bot history</code> <i>в чат.</i>",
 
         # Statistika xabarlari (rus tilida)
         "stats_title": "📊 <b>Статистика</b>\n",
