@@ -8,7 +8,7 @@ from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import BufferedInputFile
-import csv
+from openpyxl import Workbook
 import io
 from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 
@@ -469,7 +469,7 @@ async def cb_reg_skip(callback: CallbackQuery):
 
 @router.callback_query(F.data == "admin_tasks")
 async def cb_admin_tasks(callback: CallbackQuery):
-    """Admin uchun barcha ishlarni CSV formatida yuklab berish."""
+    """Admin uchun barcha ishlarni Excel formatida yuklab berish."""
     if callback.from_user.id not in ADMIN_IDS:
         return
         
@@ -480,13 +480,16 @@ async def cb_admin_tasks(callback: CallbackQuery):
         await callback.answer("Hozircha hech qanday ishlar mavjud emas.", show_alert=True)
         return
         
-    output = io.StringIO()
-    writer = csv.writer(output)
-    writer.writerow(["ID", "User ID", "Holat", "Summa", "Sana", "Email", "Parol", "Ism", "Familiya", "Manzil", "Shahar", "Viloyat", "Pochta indeksi", "Telefon"])
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Ishlar Ro'yxati"
+    
+    headers = ["ID", "User ID", "Holat", "Summa", "Sana", "Email", "Parol", "Ism", "Familiya", "Manzil", "Shahar", "Viloyat", "Pochta indeksi", "Telefon"]
+    ws.append(headers)
     
     for item in data:
         details = item.get("details") or {}
-        writer.writerow([
+        row = [
             item.get("id", ""),
             item.get("user_id", ""),
             item.get("status", ""),
@@ -501,13 +504,17 @@ async def cb_admin_tasks(callback: CallbackQuery):
             details.get("state", ""),
             details.get("postal", ""),
             details.get("phone", ""),
-        ])
+        ]
+        ws.append(row)
         
-    csv_bytes = output.getvalue().encode('utf-8')
-    file = BufferedInputFile(csv_bytes, filename="ishlar_royxati.csv")
+    output = io.BytesIO()
+    wb.save(output)
+    output.seek(0)
+    
+    file = BufferedInputFile(output.read(), filename="ishlar_royxati.xlsx")
     
     await callback.message.answer_document(
         document=file,
-        caption="📁 Barcha ishlar ro'yxati (CSV formatda)"
+        caption="📁 Barcha ishlar ro'yxati (Excel formatda)"
     )
     await callback.answer()
